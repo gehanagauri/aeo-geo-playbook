@@ -1,5 +1,5 @@
-// Shared primitives: Sticker, BurstBadge, PostageStamp, SectionTag, Card,
-// MarqueeBar, Diamond, Dot, Spark
+// Shared pop-art primitives: Sticker, BurstBadge, PostageStamp, SectionTag,
+// Card, MarqueeBar, Diamond, Spark
 import React from 'react';
 
 const Sticker = ({ children, color = '#ffd95c', rotate = -3, className = '', size = 'md' }) => {
@@ -112,10 +112,6 @@ const Diamond = ({ size = 14, color = '#ef3333', className = '' }) =>
 <span className={`inline-block ${className}`} style={{ width: size, height: size, background: color, transform: 'rotate(45deg)' }} />;
 
 
-const Dot = ({ size = 10, color = '#0A0A0A', className = '' }) =>
-<span className={`inline-block rounded-full ${className}`} style={{ width: size, height: size, background: color }} />;
-
-
 // 4-point sparkle (simple SVG, allowed primitive)
 const Spark = ({ size = 18, color = '#ef3333', className = '' }) =>
 <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden>
@@ -123,4 +119,4 @@ const Spark = ({ size = 18, color = '#ef3333', className = '' }) =>
   </svg>;
 
 
-export { Sticker, BurstBadge, PostageStamp, SectionTag, Card, MarqueeBar, Diamond, Dot, Spark };
+export { Sticker, BurstBadge, PostageStamp, SectionTag, Card, MarqueeBar, Diamond, Spark };

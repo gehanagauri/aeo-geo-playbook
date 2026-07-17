@@ -98,3 +98,27 @@ Behavior that must survive the migration exactly:
 - Reported duplicate `somMentions`: only one definition found in the
   extracted sources (module04 line 315, plus one call site). Re-verify
   during Phase 2 dead-code pass against the raw bundle.
+
+## Phase 1 outcome (2026-07-17)
+
+Migration verified against the pre-migration production deploy before the
+old bundle was deleted: identical copy (full-page text diff), identical
+computed styles (theme variables, typography, borders, shadows), all module
+interactions exercised, and a full live Share of Model example run on the
+deployed Vite build. Payload went from a 2.37 MB HTML file (development
+React + in-browser Babel on every load) to a production build.
+
+## Phase 2 notes
+
+- The reported duplicate `somMentions` definition does not exist in this
+  export — the extracted Module 04 source defines each som helper exactly
+  once (the earlier sighting was likely a pre-export draft).
+- Removed as dead: `Dot` primitive; `TweakToggle/Text/Number/Color/Button`
+  controls (+ their CSS) never rendered by the panel; theme.css classes
+  `.font-sans/.font-hand/.border-ink-5/.blob/.blob-2/.stripes-ink/
+  .no-scrollbar/.rot4/.rot-4`; non-Latin font subsets (unicode-range means
+  browsers never fetched them for this English page); Archivo Black files
+  (only reachable through the hidden ?tweaks "bold" typeset — the CSS
+  font stack still names it, so restoring the files restores the option).
+- Icon.jsx now imports the nine icons the site renders instead of lucide's
+  full icon map.

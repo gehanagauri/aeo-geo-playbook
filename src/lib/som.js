@@ -1,9 +1,22 @@
 // Share of Model analysis helpers: mention detection, the ===META===
 // sentiment protocol, and the model call (window.claude in Claude
 // environments, /api/ask serverless proxy everywhere else).
+//
+// Metric definitions used across the tool:
+//   Share of Model  = answers mentioning the brand ÷ total queries × 100
+//   First-mention   = how often the brand is the first one named in an answer
+//   Favorability    = positive mentions ÷ all mentions of that brand × 100
 
+// Normalize for comparison: strip accents (NFD + combining-mark removal),
+// lowercase, trim — so "Lacoste" matches "LACOSTE" and "Café X" matches "Cafe X".
 export const somNorm = (s) => String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
 
+// Mention detection rules:
+// - Multi-word brands ("Ralph Lauren"): match the exact phrase, or fall back to
+//   every significant word (>3 chars) appearing anywhere — catches "Lauren's
+//   Ralph Lauren Polo" style reorderings without matching stray short words.
+// - Single-word brands: require a whole-word regex match so "Gap" doesn't
+//   match "gaps".
 export function somMentions(text, brand) {
   const t = somNorm(text);
   const b = somNorm(brand);
@@ -37,12 +50,21 @@ BRANDS: ${list}`;
   return text;
 }
 
+// The ===META=== protocol: the prompt asks the model to append a machine-
+// readable block after its natural answer — one "Brand :: status" line per
+// brand (positive | neutral | negative | absent). Everything before the marker
+// is the consumer-visible answer; everything after is parsed for sentiment.
 export function somSplitMeta(text) {
   const idx = text.indexOf('===META===');
   if (idx === -1) return { answer: text, meta: '' };
   return { answer: text.slice(0, idx), meta: text.slice(idx + 10) };
 }
 
+// Parse one brand's status out of the META block. Tolerates list markers and
+// numbering before the brand name, prefers an exact normalized name match,
+// then falls back to substring containment either way (model abbreviations
+// like "J.Crew" vs "J. Crew"). Returns null when the model skipped the brand,
+// in which case the caller falls back to somMentions() on the answer text.
 export function somParseSentiment(meta, brand) {
   const b = somNorm(brand);
   const rows = [];
@@ -72,6 +94,9 @@ export function somParseSentiment(meta, brand) {
   return null;
 }
 
+// First-mention: earliest index in the answer where any brand appears
+// (multi-word brands fall back to the earliest significant word when the
+// exact phrase is absent).
 export function somFirstBrand(answer, brands) {
   let best = null,bestIdx = Infinity;
   const t = String(answer).toLowerCase();

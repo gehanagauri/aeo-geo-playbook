@@ -1,15 +1,20 @@
 // Lucide icon wrapper — usage: <Icon name="check" size={20} />
+// Only the icons this site actually renders are imported, so the rest of
+// lucide's icon set stays out of the bundle.
 import React from 'react';
-import { createElement, icons } from 'lucide';
+import {
+  createElement,
+  ArrowLeft, ArrowRight, Check, ChevronDown, ChevronUp, Circle, Copy, Menu, X,
+} from 'lucide';
 
-const lucide = { createElement, icons };
+const icons = { ArrowLeft, ArrowRight, Check, ChevronDown, ChevronUp, Circle, Copy, Menu, X };
 
 const Icon = ({ name, size = 20, className = '', strokeWidth = 2.25, ...rest }) => {
   const ref = React.useRef(null);
   React.useEffect(() => {
-    if (lucide && ref.current) {
+    if (ref.current) {
       ref.current.innerHTML = '';
-      const svg = lucide.createElement(lucide.icons[toPascal(name)] || lucide.icons.Circle);
+      const svg = createElement(icons[toPascal(name)] || icons.Circle);
       svg.setAttribute('width', size);
       svg.setAttribute('height', size);
       svg.setAttribute('stroke-width', strokeWidth);
