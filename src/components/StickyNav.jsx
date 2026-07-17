@@ -70,7 +70,7 @@ const StickyNav = () => {
           })}
         </div>
 
-        <a href="#contact" onClick={(e) => {e.preventDefault();document.querySelector('footer').scrollIntoView({ behavior: 'smooth' });}}
+        <a href="#contact" onClick={(e) => {e.preventDefault();document.querySelector('footer').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });}}
         className="hidden md:inline-flex btn-pop border-ink-3 shadow-pop-sm bg-pop-red text-paper px-3 py-1.5 font-mono uppercase text-[11px] tracking-wider" style={{ backgroundColor: "rgb(239, 51, 51)" }}>
           Work with me
         </a>

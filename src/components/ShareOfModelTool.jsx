@@ -188,7 +188,7 @@ const SOM_STYLES = `
 .som-insight-col{background:var(--som-paper);border:2.5px solid var(--som-ink);border-radius:16px;padding:28px 30px;box-shadow:var(--som-shadow-lg)}
 .som-insight-col.wins{background:var(--som-mint-soft)}
 .som-insight-col.gaps{background:var(--som-pink-soft)}
-.som-insight-col h4{font-family:var(--som-sans);font-size:22px;font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:18px;display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border:2px solid var(--som-ink);border-radius:100px;background:var(--som-paper);box-shadow:3px 3px 0 0 var(--som-ink)}
+.som-insight-col h3{font-family:var(--som-sans);font-size:22px;font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:18px;display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border:2px solid var(--som-ink);border-radius:100px;background:var(--som-paper);box-shadow:3px 3px 0 0 var(--som-ink)}
 .som-insight-col ul{list-style:none;padding:0;margin:0}
 .som-insight-col li{font-family:var(--som-sans);font-size:15px;font-weight:500;line-height:1.5;padding:10px 0;border-bottom:1.5px dashed rgba(10,10,10,0.2);display:flex;gap:10px}
 .som-insight-col li:last-child{border:none}
@@ -301,6 +301,12 @@ const SOM_STYLES = `
 }
 `;
 
+
+// Respect prefers-reduced-motion for programmatic scrolling (CSS scroll-behavior
+// does not apply to explicit JS behavior options).
+const somScrollBehavior = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+
 const ShareOfModelTool = () => {
   const [stage, setStage] = useState(1);
   const [doneStages, setDoneStages] = useState(new Set());
@@ -402,7 +408,7 @@ const ShareOfModelTool = () => {
       setResults(null);
       setRunning(false);
     }
-    setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    setTimeout(() => sectionRef.current?.scrollIntoView({ behavior: somScrollBehavior(), block: 'start' }), 50);
   };
 
   const addCompetitor = () => {
@@ -501,7 +507,7 @@ const ShareOfModelTool = () => {
       setResults(finalResults);
       setRunning(false);
       setTimeout(() => {
-        resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        resultsRef.current?.scrollIntoView({ behavior: somScrollBehavior(), block: 'start' });
         resultHeadRef.current?.focus();
       }, 100);
     } catch (e) {
@@ -670,11 +676,11 @@ const ShareOfModelTool = () => {
               <span className="som-tag-pill pink">CHAPTER 04</span>
               <span className="som-tag-pill blue">RUN IT NOW</span>
             </div>
-            <h1 className="som-headline">
+            <h2 className="som-headline">
               ARE YOU IN <span className="som-mark-yellow">THE</span><br />
               ANSWER, <em>or</em><br />
               OUTSIDE IT?
-            </h1>
+            </h2>
             <p className="som-deck">
               Run a live <span className="mark-mint">Share of Model</span> on your brand against{' '}
               <span className="mark-pink">your competition</span> — straight from this page. Pick prompts.
@@ -793,7 +799,7 @@ const ShareOfModelTool = () => {
                       const isOpen = cat in openCats ? openCats[cat] : ci === 0;
                       return (
                         <div key={cat} className="som-cat">
-                        <div className="som-cat-head" onClick={() => setOpenCats((prev) => ({ ...prev, [cat]: !(cat in prev ? prev[cat] : ci === 0) }))}>
+                        <div className="som-cat-head" role="button" tabIndex={0} aria-expanded={isOpen} onClick={() => setOpenCats((prev) => ({ ...prev, [cat]: !(cat in prev ? prev[cat] : ci === 0) }))} onKeyDown={(e) => {if (e.key === 'Enter' || e.key === ' ') {e.preventDefault();setOpenCats((prev) => ({ ...prev, [cat]: !(cat in prev ? prev[cat] : ci === 0) }));}}}>
                           <div className="som-cat-title">
                             <span className="som-cat-badge">{cat}</span>
                             {items.length} prompt{items.length > 1 ? 's' : ''}
@@ -841,7 +847,7 @@ const ShareOfModelTool = () => {
                   <div key={i} className="som-selected-item">
                       <span className="num">{i + 1}</span>
                       <div className="text">{p}</div>
-                      <button onClick={() => removeSelected(i)}>×</button>
+                      <button aria-label={`Remove prompt: ${p}`} onClick={() => removeSelected(i)}>×</button>
                     </div>
                   )}
                 </div>
@@ -1041,11 +1047,11 @@ const ShareOfModelTool = () => {
 
                 <div className="som-insights">
                   <div className="som-insight-col wins">
-                    <h4>✓ STRENGTHS</h4>
+                    <h3>✓ STRENGTHS</h3>
                     <ul>{derived.wins.map((w, i) => <li key={i} dangerouslySetInnerHTML={{ __html: w }} />)}</ul>
                   </div>
                   <div className="som-insight-col gaps">
-                    <h4>→ GAPS TO CLOSE</h4>
+                    <h3>→ GAPS TO CLOSE</h3>
                     <ul>{derived.gaps.map((g, i) => <li key={i} dangerouslySetInnerHTML={{ __html: g }} />)}</ul>
                   </div>
                 </div>

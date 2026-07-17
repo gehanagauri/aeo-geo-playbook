@@ -15,16 +15,19 @@ import PlaybookTweaks from './components/PlaybookTweaks.jsx';
 
 const App = () =>
 <div id="top">
+    <a href="#main" className="skip-link">Skip to content</a>
     <ScrollProgress />
     <Hero />
     <StickyNav />
-    <WhyCallout />
-    <TableOfContents />
-    <Module01 />
-    <Module02 />
-    <Module03 />
-    <ShareOfModelTool />
-    <Module05 />
+    <main id="main">
+      <WhyCallout />
+      <TableOfContents />
+      <Module01 />
+      <Module02 />
+      <Module03 />
+      <ShareOfModelTool />
+      <Module05 />
+    </main>
     <Footer />
     {typeof window !== 'undefined' && window.location.search.includes('tweaks') && <PlaybookTweaks />}
   </div>;

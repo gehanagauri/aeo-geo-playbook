@@ -105,6 +105,7 @@ const Module03 = () => {
                   </div>
                   <button
                     onClick={() => setOpenIdx(open ? -1 : i)}
+                    aria-expanded={open}
                     className="md:col-span-5 p-4 text-left bg-pop-mint hover:bg-pop-mint/80 transition-colors relative group">
                     
                     <div className="absolute top-3 right-3 flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-ink/60">
