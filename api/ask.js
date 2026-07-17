@@ -8,18 +8,23 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server misconfigured: GEMINI_API_KEY is not set' });
 
   let r;
-  try {
-    r = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-      }
-    );
-  } catch (e) {
-    console.error('Gemini fetch failed:', e);
-    return res.status(502).json({ error: 'Model error', detail: String(e) });
+  for (let attempt = 0; ; attempt++) {
+    try {
+      r = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        }
+      );
+    } catch (e) {
+      console.error('Gemini fetch failed:', e);
+      return res.status(502).json({ error: 'Model error', detail: String(e) });
+    }
+    // 503 = temporary high demand, 429 = rate limit: both worth a short retry
+    if ((r.status !== 503 && r.status !== 429) || attempt >= 3) break;
+    await new Promise(done => setTimeout(done, 1500 * (attempt + 1)));
   }
   if (!r.ok) {
     const body = await r.text();
