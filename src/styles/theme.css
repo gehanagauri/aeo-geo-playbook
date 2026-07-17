@@ -1,0 +1,106 @@
+
+  :root {
+    /* ORIGINAL pop-art defaults — restored. Tweaks override at runtime. */
+    --c-ink: #0A0A0A;
+    --c-paper: #ffffff;
+    --c-1: #ef3333;
+    --c-2: #8baaff;
+    --c-3: #a9e1c6;
+    --c-4: #ffd95c;
+    --c-5: #FFB5C5;
+    --font-display: 'Archivo Black', sans-serif;
+    --font-accent:  'Fraunces', serif;
+    --font-body:    'Space Grotesk', sans-serif;
+    --radius: 0px;
+    --radius-sm: 0px;
+    --radius-lg: 0px;
+    --bw-2: 3px;
+    --bw-3: 4px;
+    --shadow-x: 6px;
+    --shadow-y: 6px;
+    --shadow-blur: 0px;
+    --shadow-color: #0A0A0A;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--c-paper);
+    color: var(--c-ink);
+    font-family: var(--font-body), sans-serif;
+  }
+  .font-display { font-family: var(--font-display); letter-spacing: -0.005em; }
+  .font-serif   { font-family: var(--font-accent), serif; }
+  .font-sans    { font-family: var(--font-body), sans-serif; }
+  .font-hand    { font-family: 'Caveat', cursive; }
+
+  .border-ink-3 { border: var(--bw-2) solid var(--c-ink); border-radius: var(--radius); }
+  .border-ink-4 { border: var(--bw-3) solid var(--c-ink); border-radius: var(--radius); }
+  .border-ink-5 { border: calc(var(--bw-3) + 1px) solid var(--c-ink); border-radius: var(--radius); }
+  button.border-ink-3, button.border-ink-4, a.border-ink-3, a.border-ink-4 { border-radius: var(--radius-sm); }
+
+  .shadow-pop    { box-shadow: var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-color); }
+  .shadow-pop-sm { box-shadow: calc(var(--shadow-x) * 0.66) calc(var(--shadow-y) * 0.66) var(--shadow-blur) var(--shadow-color); }
+  .shadow-pop-lg { box-shadow: calc(var(--shadow-x) * 1.66) calc(var(--shadow-y) * 1.66) var(--shadow-blur) var(--shadow-color); }
+
+  .btn-pop {
+    transition: transform 160ms cubic-bezier(.2,.7,.2,1), box-shadow 160ms ease;
+  }
+  .btn-pop:hover {
+    transform: translate(calc(var(--shadow-x) * -0.33), calc(var(--shadow-y) * -0.33));
+    box-shadow: calc(var(--shadow-x) * 1.4) calc(var(--shadow-y) * 1.4) var(--shadow-blur) var(--shadow-color);
+  }
+  .btn-pop:active {
+    transform: translate(calc(var(--shadow-x) * 0.33), calc(var(--shadow-y) * 0.33));
+    box-shadow: calc(var(--shadow-x) * 0.33) calc(var(--shadow-y) * 0.33) var(--shadow-blur) var(--shadow-color);
+  }
+
+  /* Burst (jagged star) */
+  .burst-44 {
+    clip-path: polygon(
+      50% 0%, 56% 8%, 64% 3%, 67% 12%, 76% 9%, 76% 19%, 86% 18%, 83% 27%,
+      93% 29%, 88% 37%, 97% 42%, 90% 49%, 97% 57%, 88% 61%, 93% 71%, 83% 72%,
+      86% 82%, 76% 81%, 76% 91%, 67% 88%, 64% 97%, 56% 92%, 50% 100%, 44% 92%,
+      36% 97%, 33% 88%, 24% 91%, 24% 81%, 14% 82%, 17% 72%, 7% 71%, 12% 61%,
+      3% 57%, 10% 49%, 3% 42%, 12% 37%, 7% 29%, 17% 27%, 14% 18%, 24% 19%,
+      24% 9%, 33% 12%, 36% 3%, 44% 8%
+    );
+  }
+  /* Soft blob — used when shape mode = "flowy" */
+  .blob   { border-radius: 64% 36% 58% 42% / 48% 56% 44% 52%; }
+  .blob-2 { border-radius: 42% 58% 36% 64% / 56% 44% 56% 44%; }
+
+  /* Marquee */
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .marquee-track { animation: marquee 38s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track, .btn-pop { animation: none !important; transition: none !important; }
+  }
+
+  /* Subtle paper texture */
+  .paper-tex {
+    background-image: radial-gradient(rgba(42,37,34,0.04) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* Halftone */
+  .halftone {
+    background-image: radial-gradient(var(--c-ink) 1.2px, transparent 1.4px);
+    background-size: 10px 10px;
+    opacity: 0.7;
+  }
+
+  .stripes-ink {
+    background-image: repeating-linear-gradient(45deg, var(--c-ink) 0 6px, transparent 6px 12px);
+  }
+
+  .nav-blur { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  ::selection { background: var(--c-4); color: var(--c-ink); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .rot-2 { transform: rotate(-2deg); }
+  .rot2  { transform: rotate(2deg); }
+  .rot-4 { transform: rotate(-4deg); }
+  .rot4  { transform: rotate(4deg); }
+  section[id] { scroll-margin-top: 96px; }
