@@ -622,6 +622,7 @@ const ShareOfModelTool = () => {
     const clip = (t) => t.length > 62 ? t.slice(0, 62).replace(/\s+\S*$/, '') + '…' : t;
     const wins = [],gaps = [];
     if (delta > 0 && topComp) wins.push(`Ahead of <strong>${topComp}</strong> by ${delta} points.`);
+    if (delta === 0 && topComp && yours) wins.push(`Level with <strong>${topComp}</strong> — the top brand in this set.`);
     if (yourFirstPct >= 30) wins.push(`Named <strong>first</strong> in ${yourFirstPct}% of answers — you're the default.`);
     if (yourFav >= 60 && yours) wins.push(`The model speaks well of you — <strong>${yourFav}%</strong> positive when it names you.`);
     if (yourPct >= 50) wins.push(`Named in <strong>${yourPct}%</strong> of all answers.`);
@@ -634,11 +635,13 @@ const ShareOfModelTool = () => {
     results.forEach((r) => {if ((r.mentions[yourBrand] || 0) === 0) gaps.push(`Never named on: <em>"${clip(r.prompt)}"</em>`);});
 
     // One plain sentence a non-marketer can read: how often, and against whom.
+    const vsTop = !topComp ? '' :
+    delta === 0 ? ` Level with ${topComp}.` :
+    delta > 0 ? ` That's ${delta} points ahead of ${topComp}.` :
+    ` That's ${Math.abs(delta)} points behind ${topComp}.`;
     const headline = yours === 0 ?
     `Never named across ${totalSlots} answers.${topComp ? ` ${topComp} was named in ${topPct}%.` : ''}` :
-    `Named in ${yours} of ${totalSlots} answers.${topComp ? delta >= 0 ?
-    ` That's ${delta} points ahead of ${topComp}.` :
-    ` That's ${Math.abs(delta)} points behind ${topComp}.` : ''}`;
+    `Named in ${yours} of ${totalSlots} answers.${vsTop}`;
 
     return {
       allBrands, totalSlots, reps, yours, yourPct, yourFirstPct, yourFav,
