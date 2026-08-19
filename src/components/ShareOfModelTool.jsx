@@ -327,6 +327,7 @@ const ShareOfModelTool = () => {
   const [results, setResults] = useState(null);
   const [openPR, setOpenPR] = useState({});
   const [openFold, setOpenFold] = useState({ prompts: false, method: false });
+  const [autoRun, setAutoRun] = useState(false);
   const [openCats, setOpenCats] = useState({});
 
   const sectionRef = useRef(null);
@@ -406,7 +407,7 @@ const ShareOfModelTool = () => {
 
   const addCompetitor = () => {
     const v = compInput.trim();
-    if (!v || competitors.includes(v) || competitors.length >= 8) {setCompInput('');return;}
+    if (!v || competitors.includes(v) || competitors.length >= 6) {setCompInput('');return;}
     setCompetitors([...competitors, v]);setCompInput('');
   };
   const removeCompetitor = (i) => setCompetitors(competitors.filter((_, idx) => idx !== i));
@@ -530,8 +531,18 @@ const ShareOfModelTool = () => {
     setDoneStages(new Set([1, 2]));
     setStage(3);
     setResults(null);
-    setTimeout(() => runBtnRef.current?.focus(), 120);
+    setAutoRun(true);
   };
+
+  // tryExample sets state, so the run has to wait a render for those values
+  // to land rather than reading stale ones.
+  useEffect(() => {
+    if (!autoRun) return;
+    if (!yourBrand || selectedPrompts.length === 0 || running) return;
+    setAutoRun(false);
+    sectionRef.current?.scrollIntoView({ behavior: somScrollBehavior(), block: 'start' });
+    run();
+  }, [autoRun, yourBrand, selectedPrompts, running]);
 
   const exportCSV = () => {
     if (!results) return;
@@ -728,7 +739,7 @@ const ShareOfModelTool = () => {
               <h2 className="som-card-title">THE <em>lineup</em>.</h2>
               <p className="som-card-sub">Tell the machines who you are and who you're up against. Two minutes, tops.</p>
               <div style={{ margin: '0 0 22px' }}>
-                <button className="som-btn mint" onClick={tryExample}>✦ TRY AN EXAMPLE</button>
+                <button className="som-btn mint" onClick={tryExample}>✦ RUN A LIVE EXAMPLE</button>
               </div>
 
               <div className="som-field-row">
@@ -755,7 +766,7 @@ const ShareOfModelTool = () => {
 
               <div className="som-field">
                 <label className="som-label">COMPETITORS <span className="req">*</span></label>
-                <p style={{ fontFamily: 'var(--som-serif)', fontStyle: 'italic', color: 'var(--som-mute)', margin: '-2px 0 12px', fontSize: 14 }}>Add 2 to 6. Press Enter or tap Add.</p>
+                <p style={{ fontFamily: 'var(--som-serif)', fontStyle: 'italic', color: 'var(--som-mute)', margin: '-2px 0 12px', fontSize: 14 }}>Add up to 6. Press Enter or tap Add.</p>
                 <div className="som-add-row">
                   <input type="text" className="som-input" value={compInput}
                     onChange={(e) => setCompInput(e.target.value)}
