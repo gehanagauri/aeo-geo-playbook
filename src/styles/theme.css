@@ -3,7 +3,7 @@
     /* ORIGINAL pop-art defaults — restored. Tweaks override at runtime. */
     --c-ink: #0A0A0A;
     --c-paper: #ffffff;
-    --c-1: #ef3333;
+    --c-1: #d92525;
     --c-2: #8baaff;
     --c-3: #a9e1c6;
     --c-4: #ffd95c;
@@ -113,3 +113,6 @@
   .rot-2 { transform: rotate(-2deg); }
   .rot2  { transform: rotate(2deg); }
   section[id] { scroll-margin-top: 96px; }
+
+  /* Visually hidden, still read aloud by screen readers. */
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

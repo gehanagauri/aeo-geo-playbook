@@ -21,7 +21,7 @@ const ScrollProgress = () => {
         className="h-full transition-[width] duration-100 ease-out"
         style={{
           width: `${pct}%`,
-          background: 'linear-gradient(90deg, #ef3333 0%, #ffd95c 35%, #a9e1c6 65%, #8baaff 100%)'
+          background: 'linear-gradient(90deg, #d92525 0%, #ffd95c 35%, #a9e1c6 65%, #8baaff 100%)'
         }} />
 
     </div>);
@@ -71,7 +71,7 @@ const StickyNav = () => {
         </div>
 
         <a href="#contact" onClick={(e) => {e.preventDefault();document.querySelector('footer').scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });}}
-        className="hidden md:inline-flex btn-pop border-ink-3 shadow-pop-sm bg-pop-red text-paper px-3 py-1.5 font-mono uppercase text-[11px] tracking-wider" style={{ backgroundColor: "rgb(239, 51, 51)" }}>
+        className="hidden md:inline-flex btn-pop border-ink-3 shadow-pop-sm bg-pop-red text-paper px-3 py-1.5 font-mono uppercase text-[11px] tracking-wider" style={{ backgroundColor: "rgb(217, 37, 37)" }}>
           Work with me
         </a>
 

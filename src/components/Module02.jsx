@@ -63,14 +63,14 @@ const TRIPLE_PLAY = [
     tagline: 'See what the models actually say.',
     color: '#ffd95c',
     textColor: '#0A0A0A',
-    accent: '#ef3333',
+    accent: '#d92525',
     stepIds: [1, 2],
   },
   {
     key: 'patch',
     label: 'Patch',
     tagline: 'Diagnose the gap. Write the fix. Place it.',
-    color: '#ef3333',
+    color: '#d92525',
     textColor: '#ffffff',
     accent: '#ffd95c',
     stepIds: [3, 4, 5],
@@ -100,15 +100,14 @@ const Module02 = () => {
       <div className="px-6 md:px-12 lg:px-20 py-20 text-ink">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
           <div className="lg:col-span-8">
-            <SectionTag number="02" title="The Triple-Play Framework" color="#ef3333" />
+            <SectionTag number="02" title="The Triple-Play Framework" color="#d92525" />
             <h2 className="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)]">
               Probe. Patch.<br/>
               <span className="italic font-serif font-normal lowercase">then</span> persist.
             </h2>
             <p className="mt-6 max-w-2xl text-lg text-ink/80">
-              Stop optimizing for one engine at a time. The teams that win across Google, ChatGPT,
-              Perplexity, and the next thing run a single workflow on a tight loop — three phases,
-              seven steps, owned by one person.
+              Stop optimizing one engine at a time. The teams that win across Google, ChatGPT and
+              Perplexity run one loop — three phases, seven steps, owned by one person.
             </p>
           </div>
           <div className="lg:col-span-4 flex lg:justify-end">

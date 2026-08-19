@@ -11,51 +11,48 @@ import { somAskModel, somSplitMeta, somParseSentiment, somMentions, somFirstBran
 
 
 const MEASURE_NOTE = {
-  share: 'Share of Model — how often each brand surfaces in the answers, across every query.',
-  first: 'First-mention rate — how often each brand is the one named first. The default the model reaches for.',
-  sentiment: 'Favorability — of the times a brand was named, how often the tone was positive.'
+  share: 'How often each brand is named, across every answer.',
+  first: 'How often each brand is named first — the one the model reaches for.',
+  sentiment: 'When a brand is named, how often the model speaks well of it.'
 };
-
-// Simple hand-drawn pointer (up-and-right). Decorative only.
-const SomArrow = ({ w = 54, h = 40 }) =>
-<svg width={w} height={h} viewBox="0 0 54 40" aria-hidden="true">
-    <path d="M10 36 C 2 20, 16 8, 46 6" fill="none" stroke="#ee5530" strokeWidth="2.6" strokeLinecap="round" />
-    <path d="M35 5 L49 4 L44 17" fill="none" stroke="#ee5530" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>;
-
 
 const SOM_STYLES = `
 .som-section,.som-section *{box-sizing:border-box}
 .som-section{
   --som-cream:#f5f1e3;--som-cream-2:#ece6d2;--som-ink:#0a0a0a;--som-paper:#fff;
-  --som-yellow:#f5d547;--som-pink:#f9c2cc;--som-blue:#4f7df0;--som-mint:#8de4c0;
-  --som-coral:#ee5530;--som-coral-d:#d63d1a;
+  --som-yellow:#f5d547;--som-pink:#f9c2cc;--som-blue:#4f7df0;--som-blue-d:#3f66cf;--som-mint:#8de4c0;
+  --som-coral:#ee5530;--som-coral-d:#d63d1a;--som-field:#5f594e;
   --som-mint-soft:#b8eed4;--som-pink-soft:#fcd9df;--som-yellow-mark:#fce97a;
   --som-rule:#0a0a0a;--som-line:rgba(10,10,10,0.12);--som-mute:#5a544a;
-  --som-sans:'Archivo','Space Grotesk',system-ui,sans-serif;
-  --som-serif:'Fraunces',Georgia,serif;
+  /* Type + accent tokens inherit the site theme so this module matches the
+     rest of the page (and follows the Tweaks panel) instead of hard-coding
+     its own typeface stack. */
+  --som-display:var(--font-display),sans-serif;
+  --som-sans:var(--font-body),sans-serif;
+  --som-serif:var(--font-accent),Georgia,serif;
   --som-mono:'JetBrains Mono',ui-monospace,monospace;
   --som-shadow:4px 4px 0 0 var(--som-ink);
   --som-shadow-lg:6px 6px 0 0 var(--som-ink);
   background:var(--som-paper);font-family:var(--som-sans);color:var(--som-ink);
-  padding:80px 40px 100px;position:relative;overflow:hidden;border-top:4px solid var(--som-ink);border-bottom:4px solid var(--som-ink);
+  padding:64px 40px 76px;position:relative;overflow:hidden;border-top:4px solid var(--som-ink);border-bottom:4px solid var(--som-ink);
 }
 .som-section::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(10,10,10,0.08) 1px,transparent 1px);background-size:24px 24px;pointer-events:none;z-index:0}
 .som-wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1}
-.som-marquee{background:var(--som-ink);color:var(--som-cream);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;margin:-80px -40px 60px;font-family:var(--som-mono);font-size:12px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;position:relative;z-index:2}
+.som-marquee{background:var(--som-ink);color:var(--som-cream);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;margin:-64px -40px 44px;font-family:var(--som-mono);font-size:12px;letter-spacing:0.16em;text-transform:uppercase;font-weight:600;position:relative;z-index:2}
 .som-marquee .star{color:var(--som-yellow);margin:0 14px;font-size:14px}
 .som-marquee .center{display:flex;align-items:center}
-.som-header{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:start;margin-bottom:56px}
+.som-header{display:grid;grid-template-columns:1fr auto;gap:36px;align-items:start;margin-bottom:32px}
 .som-header-left{min-width:0}
-.som-pill-row{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:36px}
+.som-pill-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:24px}
 .som-tag-pill{display:inline-flex;align-items:center;padding:10px 22px;border:2px solid var(--som-ink);border-radius:100px;font-family:var(--som-mono);font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;box-shadow:var(--som-shadow);transform:rotate(-1.5deg)}
 .som-tag-pill:nth-child(2){transform:rotate(1deg)}
 .som-tag-pill:nth-child(3){transform:rotate(-0.5deg)}
-.som-tag-pill.yellow{background:var(--som-yellow)}.som-tag-pill.pink{background:var(--som-pink)}.som-tag-pill.blue{background:var(--som-blue);color:#fff}.som-tag-pill.mint{background:var(--som-mint)}
-.som-headline{font-family:var(--som-sans);font-weight:800;font-size:clamp(54px,8vw,116px);line-height:0.92;letter-spacing:-0.035em;color:var(--som-ink);margin:0 0 36px;text-transform:uppercase}
+.som-tag-pill.yellow{background:var(--som-yellow)}.som-tag-pill.pink{background:var(--som-pink)}.som-tag-pill.blue{background:var(--som-blue-d);color:#fff}.som-tag-pill.mint{background:var(--som-mint)}
+.som-headline{font-family:var(--som-display);font-weight:400;font-size:clamp(40px,7vw,96px);line-height:0.9;letter-spacing:-0.005em;color:var(--som-ink);margin:0 0 24px;text-transform:uppercase}
 .som-headline em{font-family:var(--som-serif);font-style:italic;font-weight:400;text-transform:lowercase;letter-spacing:-0.01em;padding:0 8px}
-.som-mark-yellow{background:var(--som-yellow-mark);padding:0 0.06em;box-shadow:0 -0.05em 0 var(--som-yellow-mark) inset,0 -0.45em 0 var(--som-yellow-mark) inset}
-.som-deck{font-family:var(--som-sans);font-size:clamp(17px,1.5vw,21px);font-weight:500;line-height:1.45;max-width:660px;margin-bottom:40px;color:var(--som-ink)}
+.som-mark-yellow{padding:0 0.06em;box-shadow:0 -0.28em 0 var(--som-yellow-mark) inset}
+.som-deck{font-family:var(--som-sans);font-size:clamp(16px,1.4vw,19px);font-weight:500;line-height:1.5;max-width:62ch;margin-bottom:0;color:var(--som-ink)}
+.som-deck em{font-family:var(--som-serif);font-style:italic;font-weight:400}
 .som-deck .mark-mint{background:var(--som-mint-soft);padding:1px 6px}
 .som-deck .mark-pink{background:var(--som-pink-soft);padding:1px 6px}
 .som-burst{position:relative;width:236px;height:200px;flex-shrink:0;display:grid;place-items:center;text-align:center;padding:26px 24px;margin-top:-4px;transform:rotate(-2deg)}
@@ -65,12 +62,12 @@ const SOM_STYLES = `
 .som-burst .som-brk.bl{bottom:0;left:0;border-right:0;border-top:0}
 .som-burst .som-brk.br{bottom:0;right:0;border-left:0;border-top:0}
 .som-burst-lab{font-family:var(--som-mono);font-size:10px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:var(--som-coral);margin-bottom:10px}
-.som-burst-text{position:relative;z-index:1;font-family:var(--som-sans);font-weight:800;font-size:34px;text-transform:uppercase;letter-spacing:-0.02em;text-align:center;line-height:0.88;color:var(--som-ink)}
+.som-burst-text{position:relative;z-index:1;font-family:var(--som-display);font-weight:400;font-size:34px;text-transform:uppercase;letter-spacing:-0.02em;text-align:center;line-height:0.88;color:var(--som-ink)}
 .som-burst-text mark{background:var(--som-mint);color:var(--som-ink);padding:0 4px}
 .som-btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 26px;border:2.5px solid var(--som-ink);border-radius:100px;font-family:var(--som-sans);font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;background:var(--som-paper);color:var(--som-ink);box-shadow:var(--som-shadow);transition:transform .12s,box-shadow .12s;white-space:nowrap;font-variant-numeric:tabular-nums}
 .som-btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 0 var(--som-ink)}
 .som-btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 0 var(--som-ink)}
-.som-btn.coral{background:var(--som-coral);color:#fff}.som-btn.coral:hover{background:var(--som-coral-d)}
+.som-btn.coral{background:var(--som-coral-d);color:#fff}.som-btn.coral:hover{background:#c8351a}
 .som-btn.yellow{background:var(--som-yellow)}.som-btn.mint{background:var(--som-mint)}.som-btn.blue{background:var(--som-blue);color:#fff}
 .som-btn.ghost{background:transparent}
 .som-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none!important;box-shadow:var(--som-shadow)!important}
@@ -84,14 +81,14 @@ const SOM_STYLES = `
 .som-stage-num{font-family:var(--som-mono);font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between}
 .som-stage-num .check{font-size:14px;display:none}
 .som-stage-tab.done .som-stage-num .check{display:inline}
-.som-stage-name{font-weight:800;font-size:22px;letter-spacing:-0.02em;text-transform:uppercase}
+.som-stage-name{font-family:var(--som-display);font-weight:400;font-size:22px;letter-spacing:-0.02em;text-transform:uppercase}
 .som-stage{display:none;animation:somFade .3s ease}
 .som-stage.active{display:block}
 @keyframes somFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .som-card{background:var(--som-paper);border:2.5px solid var(--som-ink);border-radius:16px;padding:32px 36px;box-shadow:var(--som-shadow-lg);margin-bottom:24px}
-.som-card-title{font-family:var(--som-sans);font-weight:800;font-size:32px;letter-spacing:-0.025em;text-transform:uppercase;margin-bottom:8px;line-height:1.05}
+.som-card-title{font-family:var(--som-display);font-weight:400;font-size:28px;letter-spacing:-0.025em;text-transform:uppercase;margin-bottom:8px;line-height:1.05}
 .som-card-title em{font-family:var(--som-serif);font-style:italic;font-weight:400;text-transform:lowercase;letter-spacing:-0.01em}
-.som-card-sub{font-size:15px;color:var(--som-mute);margin-bottom:28px;font-weight:500;max-width:600px;line-height:1.5}
+.som-card-sub{font-size:15px;color:var(--som-mute);margin-bottom:22px;font-weight:500;max-width:600px;line-height:1.5}
 .som-field{margin-bottom:22px}
 .som-field-row{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .som-label{display:block;font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px;color:var(--som-ink)}
@@ -104,19 +101,12 @@ const SOM_STYLES = `
 .som-pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
 .som-pill{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border:2px solid var(--som-ink);border-radius:100px;font-family:var(--som-sans);font-size:14px;font-weight:600;background:var(--som-pink);box-shadow:3px 3px 0 0 var(--som-ink)}
 .som-pill:nth-child(3n){background:var(--som-mint)}
-.som-pill:nth-child(3n+1){background:var(--som-blue);color:#fff}
+.som-pill:nth-child(3n+1){background:var(--som-blue-d);color:#fff}
 .som-pill:nth-child(3n+2){background:var(--som-pink)}
 .som-pill .x{background:none;border:none;cursor:pointer;font-size:16px;line-height:1;padding:0 0 0 4px;color:inherit;font-weight:700}
-.som-prompt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:8px}
-.som-prompt-card{background:var(--som-cream);border:2px solid var(--som-ink);border-radius:12px;padding:16px 18px;cursor:pointer;text-align:left;font-family:var(--som-sans);transition:transform .12s,box-shadow .12s,background .12s;position:relative}
-.som-prompt-card:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 0 var(--som-ink);background:var(--som-paper)}
-.som-prompt-card.selected{background:var(--som-yellow);box-shadow:4px 4px 0 0 var(--som-ink)}
-.som-prompt-type{font-family:var(--som-mono);font-size:9.5px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:6px;display:inline-block;padding:2px 8px;background:var(--som-ink);color:var(--som-cream);border-radius:100px}
-.som-prompt-card.selected .som-prompt-type{background:var(--som-coral);color:#fff}
-.som-prompt-text{font-size:14px;font-weight:500;line-height:1.4;color:var(--som-ink)}
 .som-selected-list{margin-top:28px;padding-top:28px;border-top:2px dashed var(--som-ink)}
 .som-selected-item{display:grid;grid-template-columns:32px 1fr 32px;gap:14px;align-items:center;padding:14px 18px;background:var(--som-cream);border:2px solid var(--som-ink);border-radius:10px;margin-bottom:8px;box-shadow:3px 3px 0 0 var(--som-ink)}
-.som-selected-item .num{font-family:var(--som-mono);font-weight:700;font-size:12px;background:var(--som-coral);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--som-ink)}
+.som-selected-item .num{font-family:var(--som-mono);font-weight:700;font-size:12px;background:var(--som-coral-d);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid var(--som-ink)}
 .som-selected-item .text{font-size:14px;font-weight:500}
 .som-selected-item button{background:none;border:none;font-size:18px;cursor:pointer;color:var(--som-ink);padding:0;font-weight:700}
 .som-run-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
@@ -126,7 +116,7 @@ const SOM_STYLES = `
 .som-run-cell .val{font-family:var(--som-sans);font-size:28px;font-weight:800;letter-spacing:-0.02em;line-height:1}
 .som-speed-note{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--som-yellow);border:2px solid var(--som-ink);border-radius:100px;font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;margin-top:16px;box-shadow:3px 3px 0 0 var(--som-ink)}
 .som-progress-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.som-progress-title{font-family:var(--som-sans);font-weight:800;font-size:22px;letter-spacing:-0.02em;text-transform:uppercase;display:flex;align-items:center;gap:12px}
+.som-progress-title{font-family:var(--som-display);font-weight:400;font-size:22px;letter-spacing:-0.02em;text-transform:uppercase;display:flex;align-items:center;gap:12px}
 .som-progress-title::before{content:'';width:14px;height:14px;background:var(--som-coral);border:2px solid var(--som-ink);border-radius:50%;animation:somPulse 1s ease-in-out infinite}
 @keyframes somPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(0.7);opacity:0.6}}
 .som-progress-count{font-family:var(--som-mono);font-size:14px;font-weight:700;background:var(--som-ink);color:var(--som-cream);padding:6px 14px;border-radius:100px}
@@ -143,40 +133,55 @@ const SOM_STYLES = `
 .som-live-item .status{font-family:var(--som-mono);font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase}
 .som-spin{width:14px;height:14px;border:2.5px solid var(--som-ink);border-top-color:transparent;border-radius:50%;animation:somSpin .7s linear infinite}
 @keyframes somSpin{to{transform:rotate(360deg)}}
-.som-hero-result{background:var(--som-ink);color:var(--som-cream);border:2.5px solid var(--som-ink);border-radius:20px;padding:40px 44px;margin-bottom:28px;box-shadow:var(--som-shadow-lg);position:relative;overflow:hidden}
-.som-hero-result::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:var(--som-coral);border-radius:50%;opacity:0.4;filter:blur(40px)}
-.som-hero-grid{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end;position:relative;z-index:1}
-.som-hero-eyebrow{font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--som-yellow);margin-bottom:12px}
-.som-hero-brand{font-family:var(--som-sans);font-size:28px;font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:8px}
-.som-hero-pct{font-family:var(--som-sans);font-size:clamp(120px,22vw,264px);font-weight:900;line-height:0.82;letter-spacing:-0.055em;color:var(--som-cream)}
-.som-hero-pct .pct-sym{font-family:var(--som-serif);font-style:italic;font-weight:400;font-size:0.45em;color:var(--som-coral);vertical-align:top;margin-top:0.3em;display:inline-block}
-.som-hero-cap{font-family:var(--som-sans);font-weight:500;font-size:16px;color:rgba(245,241,227,0.7);margin-top:12px;max-width:480px;line-height:1.4}
-.som-hero-side{display:flex;flex-direction:column;gap:14px;min-width:220px}
-.som-delta{background:rgba(245,241,227,0.08);border:2px solid rgba(245,241,227,0.2);border-radius:12px;padding:14px 18px}
-.som-delta .lbl{font-family:var(--som-mono);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(245,241,227,0.55);margin-bottom:4px}
-.som-delta .val{font-family:var(--som-sans);font-size:22px;font-weight:800;letter-spacing:-0.02em;color:var(--som-cream)}
-.som-delta .val.pos{color:var(--som-mint)}.som-delta .val.neg{color:var(--som-coral)}
-.som-bars{background:var(--som-paper);border:2.5px solid var(--som-ink);border-radius:16px;padding:32px 36px;box-shadow:var(--som-shadow-lg);margin-bottom:28px}
-.som-bars-h{font-family:var(--som-sans);font-weight:800;font-size:28px;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:baseline;gap:12px}
+.som-hero-brand{font-family:var(--som-display);font-size:clamp(26px,3vw,34px);font-weight:400;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:8px}
+.som-bars-h{font-family:var(--som-display);font-weight:400;font-size:28px;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:24px;display:flex;align-items:baseline;gap:12px}
 .som-bars-h em{font-family:var(--som-serif);font-style:italic;font-weight:400;text-transform:lowercase;font-size:0.85em;color:var(--som-mute)}
-.som-bar-row{display:grid;grid-template-columns:minmax(140px,200px) 1fr 90px;gap:16px;align-items:center;padding:14px 0;border-bottom:2px dashed var(--som-line)}
-.som-bar-row:last-child{border-bottom:none}
-.som-bar-name{font-family:var(--som-sans);font-size:16px;font-weight:700;letter-spacing:-0.01em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.som-bar-name.your{color:var(--som-coral);display:flex;align-items:center;gap:8px}
-.som-bar-name.your::before{content:'★';font-size:18px;color:var(--som-yellow);-webkit-text-stroke:1px var(--som-ink)}
-.som-bar-track{height:36px;background:var(--som-cream);border:2.5px solid var(--som-ink);border-radius:100px;overflow:hidden;position:relative}
-.som-bar-fill{height:100%;border-radius:100px;background:var(--som-ink);transition:width 1.2s cubic-bezier(0.22,0.61,0.36,1);position:relative}
-.som-bar-fill.your{background:repeating-linear-gradient(-45deg,var(--som-coral) 0,var(--som-coral) 10px,var(--som-coral-d) 10px,var(--som-coral-d) 20px)}
-.som-bar-fill.rank-2{background:var(--som-blue)}.som-bar-fill.rank-3{background:var(--som-mint)}.som-bar-fill.rank-4{background:var(--som-pink)}.som-bar-fill.rank-5{background:var(--som-yellow)}
-.som-bar-pct{font-family:var(--som-sans);font-size:24px;font-weight:800;letter-spacing:-0.02em;text-align:right;font-variant-numeric:tabular-nums}
-.som-bar-pct.your{color:var(--som-coral)}
-.som-prompts-block{background:var(--som-paper);border:2.5px solid var(--som-ink);border-radius:16px;padding:32px 36px;box-shadow:var(--som-shadow-lg);margin-bottom:28px}
+/* ── RESULTS: one card — headline stat block + comparison chart ── */
+.som-result{border:2.5px solid var(--som-ink);border-radius:16px;background:var(--som-paper);box-shadow:var(--som-shadow-lg);overflow:hidden;margin-bottom:18px}
+.som-result-head{background:var(--som-ink);color:var(--som-cream);padding:24px 28px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:28px;align-items:center}
+.som-result-id{min-width:0}
+.som-hero-eyebrow{font-family:var(--som-mono);font-size:10.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--som-yellow);margin-bottom:8px}
+.som-hero-cap{font-family:var(--som-sans);font-size:14.5px;font-weight:500;color:rgba(245,241,227,0.72);margin-top:10px;line-height:1.45;max-width:52ch}
+.som-kpis{display:flex;gap:10px;flex-wrap:wrap}
+.som-kpi{background:rgba(245,241,227,0.07);border:1.5px solid rgba(245,241,227,0.2);border-radius:12px;padding:10px 16px;min-width:112px}
+.som-kpi .lbl{font-family:var(--som-mono);font-size:9.5px;font-weight:700;letter-spacing:0.13em;text-transform:uppercase;color:rgba(245,241,227,0.62);margin-bottom:4px;white-space:nowrap}
+.som-kpi .val{font-family:var(--som-display);font-size:28px;line-height:1;color:var(--som-cream)}
+.som-kpi.lead{background:var(--som-coral-d);border-color:var(--som-coral-d)}
+.som-kpi.lead .lbl{color:rgba(255,255,255,0.85)}
+.som-kpi.lead .val{color:#fff;font-size:36px}
+
+/* Chart — emphasis form: your brand in accent, the field recessive */
+.som-chart{padding:24px 28px 20px}
+.som-chart-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:6px}
+.som-chart-note{font-family:var(--som-serif);font-style:italic;font-size:14px;color:var(--som-mute);margin:0 0 20px}
+.som-rows{display:flex;flex-direction:column;gap:12px}
+.som-row{display:grid;grid-template-columns:minmax(92px,148px) 1fr 58px;grid-template-areas:'name track val';gap:14px;align-items:center}
+.som-row-name{grid-area:name;font-family:var(--som-sans);font-size:13.5px;font-weight:700;text-transform:uppercase;letter-spacing:-0.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.som-row-name .star{color:var(--som-coral);flex-shrink:0}
+/* Hairline gridlines every 25% live in the track background — recessive, solid */
+.som-track{grid-area:track;position:relative;height:24px;border:2px solid var(--som-ink);border-radius:6px;overflow:hidden;background-color:var(--som-cream);background-image:repeating-linear-gradient(90deg,rgba(10,10,10,0.10) 0 1px,transparent 1px 25%);background-clip:padding-box}
+.som-fill{height:100%;background:var(--som-field);border-radius:0 4px 4px 0;width:0;transition:width .9s cubic-bezier(.22,.61,.36,1)}
+.som-fill.you{background:var(--som-coral)}
+.som-fill.zero{width:4px;border-radius:2px}
+.som-row-val{grid-area:val;font-family:var(--som-display);font-size:19px;text-align:right;font-variant-numeric:tabular-nums;line-height:1}
+.som-row-val .sub{display:block;font-family:var(--som-mono);font-size:9px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--som-mute);margin-top:3px}
+.som-axis{display:grid;grid-template-columns:minmax(92px,148px) 1fr 58px;gap:14px;margin-top:12px}
+.som-axis-scale{grid-column:2;display:flex;justify-content:space-between;font-family:var(--som-mono);font-size:9.5px;font-weight:600;letter-spacing:0.06em;color:var(--som-mute);border-top:1px solid rgba(10,10,10,0.12);padding-top:6px}
+
+/* Disclosures — reference material stays folded away by default */
+.som-fold{border:2px solid var(--som-ink);border-radius:12px;background:var(--som-paper);margin-bottom:12px;overflow:hidden}
+.som-fold-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 20px;background:var(--som-cream);border:none;cursor:pointer;font-family:var(--som-sans);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.02em;color:var(--som-ink);text-align:left;transition:background .12s}
+.som-fold-btn:hover{background:color-mix(in srgb,var(--som-yellow) 22%,var(--som-cream))}
+.som-fold-meta{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.som-fold-count{font-family:var(--som-mono);font-size:10px;font-weight:700;letter-spacing:0.1em;color:var(--som-mute);text-transform:uppercase}
+.som-fold-body{padding:16px 20px 20px;border-top:2px solid var(--som-ink)}
+.som-prompts-block{background:transparent}
 .som-prompt-result{border:2px solid var(--som-ink);border-radius:12px;margin-bottom:10px;background:var(--som-cream);overflow:hidden;transition:box-shadow .15s}
 .som-prompt-result:hover{box-shadow:3px 3px 0 0 var(--som-ink)}
 .som-prompt-result-head{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;padding:14px 18px;cursor:pointer;font-family:var(--som-sans)}
 .som-prompt-result-text{font-size:14px;font-weight:500;line-height:1.4}
 .som-score-badge{font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.06em;padding:6px 12px;border:2px solid var(--som-ink);border-radius:100px;white-space:nowrap}
-.som-score-badge.high{background:var(--som-mint)}.som-score-badge.mid{background:var(--som-yellow)}.som-score-badge.low{background:var(--som-coral);color:#fff}
+.som-score-badge.high{background:var(--som-mint)}.som-score-badge.mid{background:var(--som-yellow)}.som-score-badge.low{background:var(--som-coral-d);color:#fff}
 .som-chev{font-size:14px;font-weight:700;transition:transform .2s}
 .som-chev.open{transform:rotate(180deg)}
 .som-prompt-result-body{padding:0 18px 18px;border-top:2px dashed var(--som-ink);background:var(--som-paper)}
@@ -184,13 +189,14 @@ const SOM_STYLES = `
 .som-brand-cell{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;font-family:var(--som-sans);font-size:13px;font-weight:600;border:2px solid var(--som-ink);border-radius:10px;background:var(--som-cream)}
 .som-brand-cell.mentioned{background:var(--som-mint)}
 .som-brand-cell .pct{font-family:var(--som-mono);font-size:11px;font-weight:700}
-.som-insights{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
-.som-insight-col{background:var(--som-paper);border:2.5px solid var(--som-ink);border-radius:16px;padding:28px 30px;box-shadow:var(--som-shadow-lg)}
+.som-insights{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;align-items:start}
+.som-insights.single{grid-template-columns:1fr}
+.som-insight-col{background:var(--som-paper);border:2.5px solid var(--som-ink);border-radius:16px;padding:20px 22px;box-shadow:var(--som-shadow)}
 .som-insight-col.wins{background:var(--som-mint-soft)}
 .som-insight-col.gaps{background:var(--som-pink-soft)}
-.som-insight-col h3{font-family:var(--som-sans);font-size:22px;font-weight:800;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:18px;display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border:2px solid var(--som-ink);border-radius:100px;background:var(--som-paper);box-shadow:3px 3px 0 0 var(--som-ink)}
+.som-insight-col h3{font-family:var(--som-display);font-size:20px;font-weight:400;letter-spacing:-0.02em;text-transform:uppercase;margin-bottom:18px;display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border:2px solid var(--som-ink);border-radius:100px;background:var(--som-paper);box-shadow:3px 3px 0 0 var(--som-ink)}
 .som-insight-col ul{list-style:none;padding:0;margin:0}
-.som-insight-col li{font-family:var(--som-sans);font-size:15px;font-weight:500;line-height:1.5;padding:10px 0;border-bottom:1.5px dashed rgba(10,10,10,0.2);display:flex;gap:10px}
+.som-insight-col li{font-family:var(--som-sans);font-size:14.5px;font-weight:500;line-height:1.45;padding:8px 0;border-bottom:1.5px dashed rgba(10,10,10,0.2);display:flex;gap:10px}
 .som-insight-col li:last-child{border:none}
 .som-insight-col li::before{flex-shrink:0;font-weight:800;font-size:18px}
 .som-insight-col.wins li::before{content:'✓';color:var(--som-ink)}
@@ -201,17 +207,13 @@ const SOM_STYLES = `
 .som-method strong{font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--som-ink);display:block;margin-bottom:6px}
 .som-method em{font-family:var(--som-serif);font-style:italic;color:var(--som-ink)}
 .som-actions{display:flex;gap:12px;flex-wrap:wrap}
-.som-err{padding:12px 18px;background:var(--som-coral);color:#fff;border:2px solid var(--som-ink);border-radius:100px;font-family:var(--som-mono);font-size:12px;font-weight:700;letter-spacing:0.06em;margin-top:16px;box-shadow:3px 3px 0 0 var(--som-ink)}
+.som-err{padding:12px 18px;background:var(--som-coral-d);color:#fff;border:2px solid var(--som-ink);border-radius:100px;font-family:var(--som-mono);font-size:12px;font-weight:700;letter-spacing:0.06em;margin-top:16px;box-shadow:3px 3px 0 0 var(--som-ink)}
 .som-stage-nav{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
 .som-stage-nav .som-btn{flex:1;min-width:200px}
 .som-stage-nav .som-btn.ghost-back{flex:0;min-width:auto}
 /* ── Intro copy (transition + methodology) ── */
-.som-intro{max-width:780px;margin:-8px 0 48px}
-.som-lead{font-family:var(--som-sans);font-size:clamp(20px,2vw,26px);font-weight:600;line-height:1.35;letter-spacing:-0.01em;margin:0 0 18px;color:var(--som-ink)}
-.som-method-p{font-family:var(--som-sans);font-size:16px;font-weight:500;line-height:1.55;color:var(--som-mute);margin:0}
-.som-lead em,.som-method-p em{font-family:var(--som-serif);font-style:italic;font-weight:400;color:var(--som-ink)}
 /* ── Limitations caption ── */
-.som-limit{font-family:var(--som-mono);font-size:11.5px;line-height:1.5;letter-spacing:0.02em;color:var(--som-mute);margin:0 0 24px;max-width:700px}
+.som-limit{font-family:var(--som-mono);font-size:11px;line-height:1.5;letter-spacing:0.02em;color:var(--som-mute);margin:0 0 18px;max-width:76ch}
 .som-limit em{font-style:italic}
 /* ── Tabbed shell (integrated stages) ── */
 .som-shell{border:2.5px solid var(--som-ink);border-radius:18px;background:var(--som-paper);box-shadow:var(--som-shadow-lg);overflow:hidden;margin-bottom:28px}
@@ -222,7 +224,7 @@ const SOM_STYLES = `
 .som-shell .som-stage-tab.active{background:var(--som-yellow);box-shadow:inset 0 -6px 0 var(--som-coral)}
 .som-shell .som-stage-tab.done{background:var(--som-mint)}
 .som-shell .som-stage-tab.active.done{background:var(--som-yellow);box-shadow:inset 0 -6px 0 var(--som-coral)}
-.som-shell-body{padding:34px 38px}
+.som-shell-body{padding:28px 30px}
 .som-card.flush{border:none;border-radius:0;box-shadow:none;padding:0;margin-bottom:0}
 
 /* ── Stage 2 category accordions ── */
@@ -240,44 +242,23 @@ const SOM_STYLES = `
 .som-cat-prompt:hover{transform:translate(-1px,-1px);box-shadow:3px 3px 0 0 var(--som-ink);background:var(--som-paper)}
 .som-cat-prompt.selected{background:var(--som-yellow);box-shadow:3px 3px 0 0 var(--som-ink)}
 .som-cat-check{width:20px;height:20px;border:2px solid var(--som-ink);border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:var(--som-paper);margin-top:1px;line-height:1}
-.som-cat-prompt.selected .som-cat-check{background:var(--som-coral);color:#fff}
+.som-cat-prompt.selected .som-cat-check{background:var(--som-coral-d);color:#fff}
 .som-cat-ptext{font-size:14px;font-weight:500;line-height:1.4}
 
 /* ── Hero trend chip ── */
 .som-trend{display:inline-flex;align-items:center;gap:8px;font-family:var(--som-mono);font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:7px 15px;border-radius:100px;border:2px solid var(--som-ink);background:var(--som-cream);color:var(--som-ink);margin-top:16px}
-.som-trend.up{background:var(--som-mint)}.som-trend.down{background:var(--som-coral);color:#fff}.som-trend.flat{background:var(--som-yellow)}
+.som-trend.up{background:var(--som-mint)}.som-trend.down{background:var(--som-coral-d);color:#fff}.som-trend.flat{background:var(--som-yellow)}
 .som-trend .ar{font-size:15px;line-height:1}
 
 /* ── Measure / Compare toggle ── */
-.som-board-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
 .som-measure{display:inline-flex;border:2.5px solid var(--som-ink);border-radius:100px;overflow:hidden;box-shadow:3px 3px 0 0 var(--som-ink)}
-.som-measure button{appearance:none;border:none;background:var(--som-paper);font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:10px 16px;cursor:pointer;border-right:2px solid var(--som-ink);color:var(--som-ink);transition:background .12s}
+.som-measure button{appearance:none;border:none;background:var(--som-paper);font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:13px 16px;min-height:44px;cursor:pointer;border-right:2px solid var(--som-ink);color:var(--som-ink);transition:background .12s}
 .som-measure button:last-child{border-right:none}
-.som-measure button.on{background:var(--som-coral);color:#fff}
-.som-board-note{font-family:var(--som-serif);font-style:italic;font-size:14px;color:var(--som-mute);margin:2px 0 18px}
+.som-measure button.on{background:var(--som-coral-d);color:#fff}
 
 /* ── Lollipop leaderboard ── */
-.som-lolli-row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 132px;gap:18px;align-items:center;padding:16px 0;border-bottom:2px dashed var(--som-line)}
-.som-lolli-row:last-child{border-bottom:none}
-.som-lolli-name{font-family:var(--som-sans);font-size:16px;font-weight:700;letter-spacing:-0.01em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.som-lolli-name.your{color:var(--som-coral);display:flex;align-items:center;gap:8px}
-.som-lolli-name.your::before{content:'★';font-size:18px;color:var(--som-yellow);-webkit-text-stroke:1px var(--som-ink)}
-.som-lolli-track{position:relative;height:30px;display:flex;align-items:center}
-.som-lolli-base{position:absolute;left:0;right:0;height:3px;border-radius:100px;background:repeating-linear-gradient(90deg,var(--som-line) 0 7px,transparent 7px 12px)}
-.som-lolli-stem{position:absolute;left:0;height:6px;border-radius:100px;background:var(--som-ink);width:0;transition:width 1s cubic-bezier(.22,.61,.36,1)}
-.som-lolli-stem.your{background:repeating-linear-gradient(-45deg,var(--som-coral) 0,var(--som-coral) 9px,var(--som-coral-d) 9px,var(--som-coral-d) 18px)}
-.som-lolli-dot{position:absolute;width:28px;height:28px;border-radius:50%;border:2.5px solid var(--som-ink);background:var(--som-blue);left:0;transform:translateX(-50%);transition:left 1s cubic-bezier(.22,.61,.36,1);box-shadow:2px 2px 0 0 rgba(10,10,10,.25)}
-.som-lolli-dot.your{background:var(--som-coral)}
-.som-lolli-dot.rank-2{background:var(--som-blue)}.som-lolli-dot.rank-3{background:var(--som-mint)}.som-lolli-dot.rank-4{background:var(--som-pink)}.som-lolli-dot.rank-5{background:var(--som-yellow)}
-.som-lolli-val{display:flex;flex-direction:column;align-items:flex-end;justify-content:center}
-.som-lolli-pct{font-family:var(--som-sans);font-size:25px;font-weight:800;letter-spacing:-0.02em;font-variant-numeric:tabular-nums;line-height:1}
-.som-lolli-pct.your{color:var(--som-coral)}
-.som-lolli-sub{font-family:var(--som-mono);font-size:9.5px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--som-mute);margin-top:4px;white-space:nowrap}
 
 /* ── Hand-drawn annotations ── */
-.som-scribble{position:absolute;pointer-events:none;z-index:6;display:flex;flex-direction:column;align-items:center}
-.som-scribble .lbl{font-family:'Caveat',cursive;font-weight:700;font-size:23px;line-height:1;color:var(--som-coral);white-space:nowrap}
-.som-scribble svg{display:block;overflow:visible}
 
 @media (max-width:900px){
   .som-section{padding:60px 24px 80px}.som-marquee{margin:-60px -24px 40px}
@@ -286,18 +267,29 @@ const SOM_STYLES = `
   .som-stages{grid-template-columns:1fr}.som-stage-tab{padding:14px 18px}
   .som-field-row{grid-template-columns:1fr;gap:16px}.som-prompt-grid{grid-template-columns:1fr}
   .som-run-summary{grid-template-columns:repeat(2,1fr)}.som-hero-grid{grid-template-columns:1fr}
-  .som-hero-side{flex-direction:row;flex-wrap:wrap}.som-hero-side>*{flex:1;min-width:140px}
-  .som-bar-row{grid-template-columns:100px 1fr 60px;gap:10px}
-  .som-bar-name{font-size:13px}.som-bar-pct{font-size:18px}
-  .som-bars,.som-prompts-block{padding:22px}.som-insights{grid-template-columns:1fr}.som-insight-col{padding:22px}
+  .som-prompts-block{padding:0}.som-insights{grid-template-columns:1fr}.som-insight-col{padding:18px}
+  .som-result-head{grid-template-columns:1fr;gap:18px;padding:20px}
+  .som-kpi{flex:1;min-width:88px;padding:10px 12px}.som-kpi .val{font-size:22px}.som-kpi.lead .val{font-size:28px}
+  .som-chart{padding:20px 16px 16px}
+  /* Label above a full-width bar — at 375px a side-by-side track is unreadable */
+  .som-row{grid-template-columns:1fr auto;grid-template-areas:'name val' 'track track';gap:6px 10px}
+  .som-row-name{font-size:12.5px}
+  .som-row-val{font-size:17px;text-align:right}
+  .som-row-val .sub{display:inline;margin:0 0 0 6px}
+  .som-rows{gap:18px}
+  .som-axis{grid-template-columns:1fr}.som-axis-scale{grid-column:1}
   .som-shell-body{padding:22px}
-  .som-lolli-row{grid-template-columns:92px 1fr 86px;gap:10px}
-  .som-lolli-name{font-size:13px}.som-lolli-pct{font-size:18px}
-  .som-measure{flex-wrap:wrap}
-  .som-scribble{display:none}
+  /* Segmented control: one row of three, never a wrapped pill */
+  .som-measure{display:grid;grid-template-columns:repeat(3,1fr);width:100%;border-radius:12px}
+  .som-measure button{padding:13px 6px;font-size:10px;letter-spacing:0.04em}
+  .som-chart-head{gap:12px}.som-chart-head .som-bars-h{width:100%}
+  /* Headline metric leads, the other two share the row below it */
+  .som-kpis{width:100%}
+  .som-kpi{flex:1 1 calc(50% - 5px)}
+  .som-kpi.lead{flex:1 1 100%}
 }
 @media (prefers-reduced-motion: reduce){
-  .som-marquee,.som-progress-fill,.som-bar-fill,.som-lolli-stem,.som-lolli-dot,.som-spin,.som-progress-title::before,.som-live-item,.som-cat-prompt,.som-prompt-card{animation:none !important;transition:none !important}
+  .som-marquee,.som-progress-fill,.som-fill,.som-spin,.som-progress-title::before,.som-live-item,.som-cat-prompt,.som-fold-btn{animation:none !important;transition:none !important}
 }
 `;
 
@@ -334,6 +326,7 @@ const ShareOfModelTool = () => {
   const [liveStatus, setLiveStatus] = useState({}); // { promptIndex: 'running'|'done' }
   const [results, setResults] = useState(null);
   const [openPR, setOpenPR] = useState({});
+  const [openFold, setOpenFold] = useState({ prompts: false, method: false });
   const [openCats, setOpenCats] = useState({});
 
   const sectionRef = useRef(null);
@@ -621,29 +614,38 @@ const ShareOfModelTool = () => {
     const deltaAvg = yourPct - avgPct;
 
     const board = {
-      share: allBrands.map((b) => ({ brand: b, value: pct(totals[b]), sub: `${totals[b]}/${totalSlots} answers` })).sort((a, b) => b.value - a.value),
-      first: allBrands.map((b) => ({ brand: b, value: pct(firstTotals[b]), sub: `named first ${firstTotals[b]}×` })).sort((a, b) => b.value - a.value),
-      sentiment: allBrands.map((b) => ({ brand: b, value: favPct(b), sub: totals[b] ? `${sentTotals[b].positive} pos · ${sentTotals[b].negative} neg` : 'not mentioned', n: totals[b] })).sort((a, b) => b.value - a.value)
+      share: allBrands.map((b) => ({ brand: b, value: pct(totals[b]), sub: `${totals[b]} of ${totalSlots}` })).sort((a, b) => b.value - a.value),
+      first: allBrands.map((b) => ({ brand: b, value: pct(firstTotals[b]), sub: `${firstTotals[b]}× first` })).sort((a, b) => b.value - a.value),
+      sentiment: allBrands.map((b) => ({ brand: b, value: favPct(b), sub: totals[b] ? `${sentTotals[b].positive} positive` : 'not named', n: totals[b] })).sort((a, b) => b.value - a.value)
     };
 
+    const clip = (t) => t.length > 62 ? t.slice(0, 62).replace(/\s+\S*$/, '') + '…' : t;
     const wins = [],gaps = [];
-    if (delta > 0 && topComp) wins.push(`Leading <strong>${topComp}</strong> by ${delta} pp in Share of Model.`);
-    if (yourFirstPct >= 30) wins.push(`Named <strong>first</strong> in ${yourFirstPct}% of answers — pole position.`);
-    if (yourFav >= 60 && yours) wins.push(`Sentiment skews positive — <strong>${yourFav}%</strong> favorable when mentioned.`);
-    if (yourPct >= 50) wins.push(`Strong AI visibility — present in <strong>${yourPct}%</strong> of responses.`);
-    results.forEach((r) => {if (r.mentions[yourBrand] === r.reps) wins.push(`Owned the prompt: <em>"${r.prompt.length > 60 ? r.prompt.slice(0, 60) + '…' : r.prompt}"</em>`);});
+    if (delta > 0 && topComp) wins.push(`Ahead of <strong>${topComp}</strong> by ${delta} points.`);
+    if (yourFirstPct >= 30) wins.push(`Named <strong>first</strong> in ${yourFirstPct}% of answers — you're the default.`);
+    if (yourFav >= 60 && yours) wins.push(`The model speaks well of you — <strong>${yourFav}%</strong> positive when it names you.`);
+    if (yourPct >= 50) wins.push(`Named in <strong>${yourPct}%</strong> of all answers.`);
+    results.forEach((r) => {if (r.mentions[yourBrand] === r.reps) wins.push(`Named every time on: <em>"${clip(r.prompt)}"</em>`);});
 
-    if (delta < 0 && topComp) gaps.push(`Trailing <strong>${topComp}</strong> by <strong>${Math.abs(delta)} pp</strong> — study their content moves.`);
+    if (delta < 0 && topComp) gaps.push(`<strong>${Math.abs(delta)} points</strong> behind <strong>${topComp}</strong> — look at what they publish.`);
     if (yours && yourFirstPct < 15) gaps.push(`Rarely named <strong>first</strong> (${yourFirstPct}%) — an afterthought, not the default.`);
-    if (yours && yourFav < 40) gaps.push(`Sentiment is lukewarm — only <strong>${yourFav}%</strong> favorable. Strengthen proof & narrative.`);
-    if (yourPct < 30) gaps.push(`Low overall Share of Model — prioritise GEO/AEO content sprints.`);
-    results.forEach((r) => {if ((r.mentions[yourBrand] || 0) === 0) gaps.push(`Invisible on: <em>"${r.prompt.length > 60 ? r.prompt.slice(0, 60) + '…' : r.prompt}"</em>`);});
+    if (yours && yourFav < 40) gaps.push(`Lukewarm tone — only <strong>${yourFav}%</strong> positive. Give the model better proof to quote.`);
+    if (yourPct < 30) gaps.push(`Named in just <strong>${yourPct}%</strong> of answers — start with the questions you lose.`);
+    results.forEach((r) => {if ((r.mentions[yourBrand] || 0) === 0) gaps.push(`Never named on: <em>"${clip(r.prompt)}"</em>`);});
+
+    // One plain sentence a non-marketer can read: how often, and against whom.
+    const headline = yours === 0 ?
+    `Never named across ${totalSlots} answers.${topComp ? ` ${topComp} was named in ${topPct}%.` : ''}` :
+    `Named in ${yours} of ${totalSlots} answers.${topComp ? delta >= 0 ?
+    ` That's ${delta} points ahead of ${topComp}.` :
+    ` That's ${Math.abs(delta)} points behind ${topComp}.` : ''}`;
 
     return {
       allBrands, totalSlots, reps, yours, yourPct, yourFirstPct, yourFav,
-      topComp, topPct, avgPct, delta, deltaAvg, board, sorted: board.share,
-      wins: wins.length ? wins.slice(0, 5) : ['Run more prompts to surface clear wins.'],
-      gaps: gaps.length ? gaps.slice(0, 5) : ['No major gaps detected — maintain current strategy.']
+      topComp, topPct, avgPct, delta, deltaAvg, board, headline,
+      hasWins: wins.length > 0,
+      wins: wins.slice(0, 3),
+      gaps: gaps.length ? gaps.slice(0, 3) : ['No major gaps — hold the current approach.']
     };
   }, [results, yourBrand, competitors]);
 
@@ -651,8 +653,10 @@ const ShareOfModelTool = () => {
   useEffect(() => {
     if (!derived) return;
     const id = setTimeout(() => {
-      document.querySelectorAll('.som-lolli-stem[data-w]').forEach((el) => {el.style.width = el.dataset.w + '%';});
-      document.querySelectorAll('.som-lolli-dot[data-x]').forEach((el) => {el.style.left = el.dataset.x + '%';});
+      document.querySelectorAll('.som-fill[data-w]').forEach((el) => {
+        // Zero-value bars keep the 4px stub so "0%" reads as measured, not missing.
+        if (Number(el.dataset.w) > 0) el.style.width = el.dataset.w + '%';
+      });
     }, 80);
     return () => clearTimeout(id);
   }, [derived, measure]);
@@ -682,9 +686,10 @@ const ShareOfModelTool = () => {
               OUTSIDE IT?
             </h2>
             <p className="som-deck">
-              Run a live <span className="mark-mint">Share of Model</span> on your brand against{' '}
-              <span className="mark-pink">your competition</span> — straight from this page. Pick prompts.
-              Hit run. Get a percentage. No spreadsheets.
+              You just mapped the gap you <em>want</em> to close — this measures the one you
+              actually have. Ask the questions your buyers ask, and see how often the model{' '}
+              <span className="mark-mint">names you</span>, names you{' '}
+              <span className="mark-pink">first</span>, and speaks well of you.
             </p>
           </div>
           <div className="som-burst">
@@ -695,12 +700,6 @@ const ShareOfModelTool = () => {
               <div className="som-burst-text">UNDER<br /><mark>60</mark> SEC</div>
             </div>
           </div>
-        </div>
-
-        {/* INTRO COPY — transition + methodology */}
-        <div className="som-intro">
-          <p className="som-lead">You just mapped the gap you <em>want</em> to close. This measures the one you actually have.</p>
-          <p className="som-method-p">Presence, primacy, and sentiment are three different questions. This tool keeps them separate: <em>Share of Model</em> (how often you surface), <em>first-mention rate</em> (how often you're the default the model reaches for), and <em>favorability</em> (the tone when you're named). Conflating them is the most common mistake in AI-visibility measurement.</p>
         </div>
 
         {/* TABBED SHELL — tabs + active stage live in one box */}
@@ -923,148 +922,174 @@ const ShareOfModelTool = () => {
               </>
               }
 
-            {/* Results */}
+            {/* Results — one card (stat block + chart), then insights, then
+                folded reference material. */}
             {results && derived &&
               <div ref={resultsRef} aria-live="polite">
-                <div className="som-annote" style={{ position: 'relative' }}>
-                <div className="som-hero-result">
-                  <div className="som-hero-grid">
-                    <div>
-                      <div className="som-hero-eyebrow">
-                        RESULTS · {category.toUpperCase()} · LIVE ENGINE · CLAUDE
-                      </div>
+                <div className="som-result">
+                  <div className="som-result-head">
+                    <div className="som-result-id">
+                      <div className="som-hero-eyebrow">RESULTS · {category.toUpperCase()} · LIVE · CLAUDE</div>
                       <div className="som-hero-brand" ref={resultHeadRef} tabIndex={-1}>{yourBrand.toUpperCase()}</div>
-                      <div className="som-hero-pct">{derived.yourPct}<span className="pct-sym">%</span></div>
-                      <div className="som-hero-cap">
-                        Share of Model — mentioned in {derived.yours} of {derived.totalSlots} answers across {results.length} prompts. Named first {derived.yourFirstPct}% of the time.
-                      </div>
+                      <div className="som-hero-cap">{derived.headline}</div>
                       {trend &&
                         <div className={`som-trend ${trend.delta > 0 ? 'up' : trend.delta < 0 ? 'down' : 'flat'}`}>
                           <span className="ar">{trend.delta > 0 ? '▲' : trend.delta < 0 ? '▼' : '■'}</span>
-                          {trend.delta > 0 ? '+' : ''}{trend.delta} pp vs last run · was {trend.prevPct}%
+                          {trend.delta > 0 ? '+' : ''}{trend.delta} points vs last run · was {trend.prevPct}%
                         </div>
                         }
                     </div>
-                    <div className="som-hero-side">
-                      <div className="som-delta">
-                        <div className="lbl">VS. TOP COMPETITOR</div>
-                        <div className={`val ${derived.delta >= 0 ? 'pos' : 'neg'}`}>
-                          {(derived.delta >= 0 ? '+' : '') + derived.delta} pp
-                        </div>
+                    <div className="som-kpis">
+                      <div className="som-kpi lead">
+                        <div className="lbl">Share of model</div>
+                        <div className="val">{derived.yourPct}%</div>
                       </div>
-                      <div className="som-delta">
-                        <div className="lbl">FIRST-MENTION RATE</div>
+                      <div className="som-kpi">
+                        <div className="lbl">Named first</div>
                         <div className="val">{derived.yourFirstPct}%</div>
                       </div>
-                      <div className="som-delta">
-                        <div className="lbl">FAVORABILITY</div>
-                        <div className={`val ${derived.yourFav >= 50 ? 'pos' : 'neg'}`}>{derived.yourFav}%</div>
+                      <div className="som-kpi">
+                        <div className="lbl">Positive tone</div>
+                        <div className="val">{derived.yours ? `${derived.yourFav}%` : '—'}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="som-chart">
+                    <div className="som-chart-head">
+                      <div className="som-bars-h" style={{ marginBottom: 0 }}>HOW YOU RANK</div>
+                      <div className="som-measure" role="tablist" aria-label="Compare by">
+                        {[['share', 'SHARE'], ['first', 'NAMED FIRST'], ['sentiment', 'TONE']].map(([m, l]) =>
+                        <button key={m} role="tab" aria-selected={measure === m} className={measure === m ? 'on' : ''} onClick={() => setMeasure(m)}>{l}</button>
+                        )}
+                      </div>
+                    </div>
+                    <p className="som-chart-note">{MEASURE_NOTE[measure]}</p>
+
+                    <div className="som-rows">
+                      {derived.board[measure].map((row) => {
+                        const isYou = row.brand === yourBrand;
+                        const noData = measure === 'sentiment' && row.n === 0;
+                        return (
+                          <div key={row.brand} className="som-row">
+                            <div className="som-row-name">
+                              {isYou && <span className="star" aria-hidden="true">★</span>}
+                              {row.brand}{isYou && <span className="sr-only"> (your brand)</span>}
+                            </div>
+                            <div className="som-track">
+                              {!noData &&
+                                <div
+                                  className={`som-fill${isYou ? ' you' : ''}${row.value === 0 ? ' zero' : ''}`}
+                                  data-w={row.value}
+                                  style={{ width: row.value === 0 ? 4 : 0 }} />
+                              }
+                            </div>
+                            <div className="som-row-val">
+                              {noData ? '—' : `${row.value}%`}
+                              <span className="sub">{row.sub}</span>
+                            </div>
+                          </div>);
+
+                      })}
+                    </div>
+
+                    <div className="som-axis" aria-hidden="true">
+                      <div className="som-axis-scale">
+                        <span>0</span><span>25</span><span>50</span><span>75</span><span>100%</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="som-scribble" style={{ left: '32px', bottom: '-26px' }}>
-                  <SomArrow />
-                  <span className="lbl">your share of the answer</span>
-                </div>
-                </div>
-                <div className="som-limit">Directional, not absolute: results vary by prompt phrasing and model version. Re-run on a fixed prompt set to track <em>delta</em> over time — that delta is the number that matters.</div>
 
-                <div className="som-bars" style={{ position: 'relative' }}>
-                  <div className="som-board-head">
-                    <div className="som-bars-h" style={{ marginBottom: 0 }}>THE LEADERBOARD</div>
-                    <div className="som-measure" role="tablist" aria-label="Compare by">
-                      {[['share', 'SHARE'], ['first', 'FIRST MENTION'], ['sentiment', 'SENTIMENT']].map(([m, l]) =>
-                      <button key={m} role="tab" aria-selected={measure === m} className={measure === m ? 'on' : ''} onClick={() => setMeasure(m)}>{l}</button>
-                      )}
+                <p className="som-limit">Directional, not absolute — answers shift with phrasing and model version. Re-run the same prompts over time; the change is what matters.</p>
+
+                <div className={`som-insights${derived.hasWins ? '' : ' single'}`}>
+                  {derived.hasWins &&
+                    <div className="som-insight-col wins">
+                      <h3>✓ WHAT'S WORKING</h3>
+                      <ul>{derived.wins.map((w, i) => <li key={i} dangerouslySetInnerHTML={{ __html: w }} />)}</ul>
                     </div>
-                  </div>
-                  <div className="som-board-note">{MEASURE_NOTE[measure]}</div>
-                  {derived.board[measure].map((row, i) => {
-                    const isYou = row.brand === yourBrand;
-                    const rankClass = isYou ? 'your' : `rank-${Math.min(i + 1, 5)}`;
-                    const noData = measure === 'sentiment' && row.n === 0;
-                    return (
-                      <div key={row.brand} className="som-lolli-row">
-                        <div className={`som-lolli-name${isYou ? ' your' : ''}`}>{row.brand}</div>
-                        <div className="som-lolli-track">
-                          <div className="som-lolli-base" />
-                          <div className={`som-lolli-stem${isYou ? ' your' : ''}`} data-w={row.value} style={{ width: 0 }} />
-                          <div className={`som-lolli-dot ${rankClass}`} data-x={row.value} style={{ left: 0 }} />
-                        </div>
-                        <div className="som-lolli-val">
-                          <div className={`som-lolli-pct${isYou ? ' your' : ''}`}>{noData ? '—' : `${row.value}%`}</div>
-                          <div className="som-lolli-sub">{row.sub}</div>
-                        </div>
-                      </div>);
-
-                  })}
-                  <div className="som-scribble" style={{ top: '-30px', right: '40px' }}>
-                    <span className="lbl">compare 3 ways</span>
-                    <svg width="50" height="34" viewBox="0 0 50 34" aria-hidden="true">
-                      <path d="M6 6 C 2 22, 16 30, 44 30" fill="none" stroke="#ee5530" strokeWidth="2.6" strokeLinecap="round" />
-                      <path d="M34 30 L46 31 L41 19" fill="none" stroke="#ee5530" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="som-prompts-block">
-                  <div className="som-bars-h">PROMPT-BY-PROMPT <em>breakdown</em></div>
-                  {results.map((r, i) => {
-                    const yc = r.mentions[yourBrand];
-                    const yr = Math.round(yc / r.reps * 100);
-                    const tier = yr >= 60 ? 'high' : yr >= 30 ? 'mid' : 'low';
-                    const lbl = yr >= 60 ? 'STRONG' : yr >= 30 ? 'MODERATE' : 'WEAK';
-                    const open = !!openPR[i];
-                    return (
-                      <div key={i} className="som-prompt-result">
-                        <div className="som-prompt-result-head" role="button" tabIndex={0} aria-expanded={open} aria-label={`${open ? 'Collapse' : 'Expand'} details for prompt: ${r.prompt}`} onClick={() => setOpenPR((prev) => ({ ...prev, [i]: !prev[i] }))} onKeyDown={(e) => {if (e.key === 'Enter' || e.key === ' ') {e.preventDefault();setOpenPR((prev) => ({ ...prev, [i]: !prev[i] }));}}}>
-                          <div className="som-prompt-result-text">{r.prompt}</div>
-                          <div className={`som-score-badge ${tier}`}>{yr}% · {lbl}</div>
-                          <span className={`som-chev${open ? ' open' : ''}`}>▾</span>
-                        </div>
-                        {open &&
-                        <div className="som-prompt-result-body">
-                            <div className="som-brand-grid">
-                              {derived.allBrands.map((b) => {
-                              const c = r.mentions[b];
-                              const rate = Math.round(c / r.reps * 100);
-                              const ment = c >= Math.ceil(r.reps / 2);
-                              return (
-                                <div key={b} className={`som-brand-cell${ment ? ' mentioned' : ''}`}>
-                                    <span>{b}</span>
-                                    <span className="pct">{rate}% {ment ? '✓' : '○'}</span>
-                                  </div>);
-
-                            })}
-                            </div>
-                          </div>
-                        }
-                      </div>);
-
-                  })}
-                </div>
-
-                <div className="som-insights">
-                  <div className="som-insight-col wins">
-                    <h3>✓ STRENGTHS</h3>
-                    <ul>{derived.wins.map((w, i) => <li key={i} dangerouslySetInnerHTML={{ __html: w }} />)}</ul>
-                  </div>
+                  }
                   <div className="som-insight-col gaps">
-                    <h3>→ GAPS TO CLOSE</h3>
+                    <h3>→ WHERE TO START</h3>
                     <ul>{derived.gaps.map((g, i) => <li key={i} dangerouslySetInnerHTML={{ __html: g }} />)}</ul>
                   </div>
                 </div>
 
-                <div className="som-method">
-                  <strong>METHODOLOGY</strong>
-                  Every prompt runs live against Claude (the model wired into this page). A brand counts as <em>mentioned</em> when it appears in the answer; <em>first-mention</em> tracks who gets named first; <em>sentiment</em> reads the tone toward each brand. <strong style={{ display: 'inline', fontFamily: 'var(--som-mono)', fontSize: 13 }}>Share of Model = (mentions ÷ total queries) × 100.</strong> Inputs and your last read are saved in this browser — re-run weekly and the hero shows the trend versus your previous run.
+                <div className="som-fold">
+                  <button className="som-fold-btn" aria-expanded={openFold.prompts}
+                    onClick={() => setOpenFold((p) => ({ ...p, prompts: !p.prompts }))}>
+                    <span>Prompt-by-prompt breakdown</span>
+                    <span className="som-fold-meta">
+                      <span className="som-fold-count">{results.length} prompts</span>
+                      <span className={`som-chev${openFold.prompts ? ' open' : ''}`} aria-hidden="true">▾</span>
+                    </span>
+                  </button>
+                  {openFold.prompts &&
+                    <div className="som-fold-body">
+                      <div className="som-prompts-block">
+                        {results.map((r, i) => {
+                          const yc = r.mentions[yourBrand];
+                          const yr = Math.round(yc / r.reps * 100);
+                          const tier = yr >= 60 ? 'high' : yr >= 30 ? 'mid' : 'low';
+                          const lbl = yr >= 60 ? 'STRONG' : yr >= 30 ? 'MODERATE' : 'WEAK';
+                          const open = !!openPR[i];
+                          return (
+                            <div key={i} className="som-prompt-result">
+                              <div className="som-prompt-result-head" role="button" tabIndex={0} aria-expanded={open} aria-label={`${open ? 'Collapse' : 'Expand'} details for prompt: ${r.prompt}`} onClick={() => setOpenPR((prev) => ({ ...prev, [i]: !prev[i] }))} onKeyDown={(e) => {if (e.key === 'Enter' || e.key === ' ') {e.preventDefault();setOpenPR((prev) => ({ ...prev, [i]: !prev[i] }));}}}>
+                                <div className="som-prompt-result-text">{r.prompt}</div>
+                                <div className={`som-score-badge ${tier}`}>{yr}% · {lbl}</div>
+                                <span className={`som-chev${open ? ' open' : ''}`} aria-hidden="true">▾</span>
+                              </div>
+                              {open &&
+                              <div className="som-prompt-result-body">
+                                  <div className="som-brand-grid">
+                                    {derived.allBrands.map((b) => {
+                                    const c = r.mentions[b];
+                                    const rate = Math.round(c / r.reps * 100);
+                                    const ment = c >= Math.ceil(r.reps / 2);
+                                    return (
+                                      <div key={b} className={`som-brand-cell${ment ? ' mentioned' : ''}`}>
+                                          <span>{b}</span>
+                                          <span className="pct">{rate}% {ment ? '✓' : '○'}</span>
+                                        </div>);
+
+                                  })}
+                                  </div>
+                                </div>
+                              }
+                            </div>);
+
+                        })}
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <div className="som-fold">
+                  <button className="som-fold-btn" aria-expanded={openFold.method}
+                    onClick={() => setOpenFold((p) => ({ ...p, method: !p.method }))}>
+                    <span>How this is measured</span>
+                    <span className="som-fold-meta">
+                      <span className={`som-chev${openFold.method ? ' open' : ''}`} aria-hidden="true">▾</span>
+                    </span>
+                  </button>
+                  {openFold.method &&
+                    <div className="som-fold-body">
+                      <div className="som-method">
+                        Each prompt is sent live to Claude. A brand counts as named if it appears in the
+                        answer; <em>named first</em> tracks who leads the answer; <em>tone</em> reads how the
+                        model talks about each brand.
+                        <strong style={{ display: 'block', marginTop: 8 }}>Share of model = mentions ÷ total answers × 100</strong>
+                        Your inputs and last result stay in this browser, so a repeat run shows the change.
+                      </div>
+                    </div>
+                  }
                 </div>
 
                 <div className="som-actions">
                   <button className="som-btn yellow" aria-label="Export results as CSV" onClick={exportCSV}>↓ EXPORT CSV</button>
                   <button className="som-btn mint" aria-label="Copy report to clipboard" onClick={copyReport}>⎘ COPY REPORT</button>
-                  <button className="som-btn" aria-label="Print results" onClick={() => window.print()}>⎙ PRINT</button>
                   <button className="som-btn ghost" aria-label="Reset and start a new analysis" onClick={reset} style={{ marginLeft: 'auto' }}>↺ NEW ANALYSIS</button>
                 </div>
               </div>
@@ -1083,7 +1108,5 @@ const ShareOfModelTool = () => {
     </section>);
 
 };
-
-window.ShareOfModelTool = ShareOfModelTool;
 
 export default ShareOfModelTool;

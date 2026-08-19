@@ -11,14 +11,11 @@ const WhyCallout = () =>
           The SERP is collapsing into a sentence.
         </h2>
         <p className="text-lg md:text-xl leading-snug max-w-3xl text-balance">
-          For twenty years, search returned ten blue links and let the buyer choose. Answer engines
-          don't. They retrieve from an indexed corpus, synthesize one response, and cite a handful of
-          sources — or none. The ten-link shelf where you used to rank is becoming a single paragraph
-          you're either <em className="font-serif italic font-normal">in</em> or absent from. This is{' '}
-          <em className="font-serif italic font-normal">retrieval-augmented generation</em>: the model
-          doesn't recall you, it <em className="font-serif italic font-normal">retrieves</em> you. Which
-          means visibility is a retrieval problem before it's a content problem. The five modules below
-          are how you solve it.
+          For twenty years, search gave you ten blue links and let the buyer choose. Answer engines
+          don't. They read the web, write one answer, and name a few brands — or none. The shelf you
+          used to rank on is now a single paragraph you're either{' '}
+          <em className="font-serif italic font-normal">in</em> or missing from. The five modules
+          below are how you get into it.
         </p>
       </Card>
     </div>

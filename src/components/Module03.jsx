@@ -71,8 +71,8 @@ const Module03 = () => {
               The story <span className="italic font-serif font-normal lowercase">we</span> feed.
             </h2>
             <p className="mt-6 max-w-2xl text-lg">
-              Two columns. The left is what the models say about you now. The right is what you'd
-              put in their mouth if you could. The gap between them is your roadmap.
+              Left: what the models say about you now. Right: what you'd have them say instead.
+              The gap between the two is your roadmap.
             </p>
           </div>
           <div className="lg:col-span-4 flex lg:justify-end">
@@ -116,7 +116,7 @@ const Module03 = () => {
                     <ul className="mt-4 space-y-2 border-t-2 border-ink/30 pt-4">
                         {row.tips.map((t, j) =>
                       <li key={j} className="flex items-start gap-3">
-                            <Spark size={16} color="#ef3333" className="mt-1 flex-shrink-0" />
+                            <Spark size={16} color="#d92525" className="mt-1 flex-shrink-0" />
                             <span className="font-mono text-sm leading-snug">{t}</span>
                           </li>
                       )}
@@ -131,7 +131,7 @@ const Module03 = () => {
 
         {/* Anchor callout */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card color="#ef3333" className="p-4 text-paper">
+          <Card color="#d92525" className="p-4 text-paper">
             <div className="font-mono uppercase text-[11px] tracking-[0.2em] mb-2">Pro-tip 01</div>
             <div className="font-display uppercase text-2xl leading-tight">Lead with a definition.</div>
             <p className="mt-2 text-paper/85 text-sm">Models lift first sentences. Make yours a definition you'd actually want quoted.</p>

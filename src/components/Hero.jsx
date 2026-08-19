@@ -8,10 +8,10 @@ const Hero = () => {
   return (
     <header className="relative overflow-hidden border-b-4 border-ink">
       {/* Top utility strip */}
-      <div className="bg-ink text-paper px-6 py-2 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.18em]">
+      <div className="bg-ink text-paper px-6 py-2 flex items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-[0.18em] whitespace-nowrap">
         <span className="flex items-center gap-2"><Spark size={12} color="#ffd95c" /> Issue 01 / Field guide</span>
-        <span className="hidden md:inline">Apr 2026 · Independent edition</span>
-        <span className="flex items-center gap-2">Ship. Measure. Iterate. <Spark size={12} color="#a9e1c6" /></span>
+        <span className="hidden lg:inline">Apr 2026 · Independent edition</span>
+        <span className="hidden sm:flex items-center gap-2">Ship. Measure. Iterate. <Spark size={12} color="#a9e1c6" /></span>
       </div>
 
       <div className="relative px-6 md:px-12 lg:px-20 pt-14 pb-20 paper-tex">
@@ -20,7 +20,7 @@ const Hero = () => {
           <Sticker color="#a9e1c6" rotate={8} size="lg">Read time · 22 min</Sticker>
         </div>
         <div className="hidden lg:block absolute bottom-10 left-10">
-          <Diamond size={28} color="#ef3333" />
+          <Diamond size={28} color="#d92525" />
         </div>
 
         <div className="max-w-6xl">
@@ -48,14 +48,17 @@ const Hero = () => {
                 One uncomfortable truth: if the models can't see you, you don't exist.
               </p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <a href="#module-01" className="btn-pop inline-flex items-center gap-2 border-ink-4 shadow-pop bg-pop-red text-paper px-5 py-3 font-mono uppercase text-sm font-bold" style={{ backgroundColor: "rgb(239, 51, 51)" }}>
-                  Start with the scorecard
+                <a href="#module-04" className="btn-pop inline-flex items-center gap-2 border-ink-4 shadow-pop bg-pop-red text-paper px-5 py-3 font-mono uppercase text-sm font-bold" style={{ backgroundColor: "rgb(217, 37, 37)" }}>
+                  Run the live audit
                   <Icon name="arrow-right" size={18} />
                 </a>
-                <a href="#toc" className="btn-pop inline-flex items-center gap-2 border-ink-4 shadow-pop bg-paper px-5 py-3 font-mono uppercase text-sm font-bold">
-                  Table of contents
+                <a href="#module-01" className="btn-pop inline-flex items-center gap-2 border-ink-4 shadow-pop bg-paper px-5 py-3 font-mono uppercase text-sm font-bold">
+                  Start with the scorecard
                 </a>
               </div>
+              <p className="mt-3 font-mono text-[11px] uppercase tracking-wider text-ink/60">
+                Module 04 runs live against a model — no signup, one click to try an example.
+              </p>
             </div>
 
             <div className="md:col-span-5 flex justify-center md:justify-end">

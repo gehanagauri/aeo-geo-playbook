@@ -16,10 +16,10 @@ const TableOfContents = () =>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {[
-      { n: '01', t: 'Opportunity Scorecard', s: 'Score five dimensions. Get a verdict.', c: '#ef3333', tc: '#ffffff', href: '#module-01' },
+      { n: '01', t: 'Opportunity Scorecard', s: 'Score five dimensions. Get a verdict.', c: '#d92525', tc: '#ffffff', href: '#module-01' },
       { n: '02', t: 'Unified Workflow', s: 'Seven steps. One ritual. Monthly.', c: '#8baaff', tc: '#0A0A0A', href: '#module-02' },
       { n: '03', t: 'Perception Gap', s: 'Two columns. Click for pro-tips.', c: '#a9e1c6', tc: '#0A0A0A', href: '#module-03' },
-      { n: '04', t: 'Share of Model', s: 'Run a live AI brand audit.', c: '#9f68ff', tc: '#0A0A0A', href: '#module-04' },
+      { n: '04', t: 'Share of Model', s: 'Run a live AI brand audit.', c: '#ffb59f', tc: '#0A0A0A', href: '#module-04' },
       { n: '05', t: 'Prompt Vault', s: 'Nine prompts. Copy. Run. Repeat.', c: '#ffd95c', tc: '#0A0A0A', href: '#module-05' }].
       map((item, i) =>
       <a key={item.n} href={item.href} className="block">

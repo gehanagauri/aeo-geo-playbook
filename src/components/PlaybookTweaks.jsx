@@ -9,7 +9,7 @@ const PALETTES = {
   pop: {
     label: 'Pop art',
     ink: '#0A0A0A', paper: '#ffffff',
-    c1: '#ef3333', c2: '#8baaff', c3: '#a9e1c6', c4: '#ffd95c', c5: '#FFB5C5',
+    c1: '#d92525', c2: '#8baaff', c3: '#a9e1c6', c4: '#ffd95c', c5: '#FFB5C5',
   },
   muted: {
     label: 'Muted',

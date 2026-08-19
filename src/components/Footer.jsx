@@ -15,7 +15,7 @@ const Footer = () => {
   return (
     <footer className="bg-paper border-t-4 border-ink">
       <MarqueeBar
-        color="#ef3333"
+        color="#d92525"
         textColor="#0A0A0A"
         items={['Work with me', 'Brief in, playbook out', 'AEO · GEO · narrative ops', 'Available Q3', 'Send a paragraph', 'Skip the deck']}
       />
@@ -38,7 +38,7 @@ const Footer = () => {
               <a href={`mailto:${email}`} className="font-display uppercase text-2xl leading-tight break-all hover:underline">{email}</a>
               <button
                 onClick={copy}
-                className="btn-pop inline-flex items-center gap-2 border-ink-3 shadow-pop-sm bg-paper px-3 py-2 font-mono uppercase text-[11px]"
+                className="btn-pop inline-flex items-center gap-2 border-ink-3 shadow-pop-sm bg-paper px-4 py-3 font-mono uppercase text-[11px]"
               >
                 <Icon name={copied ? 'check' : 'copy'} size={14} />
                 {copied ? 'Copied' : 'Copy'}
@@ -57,7 +57,7 @@ const Footer = () => {
       </div>
       <div className="border-t-4 border-ink bg-ink text-paper px-6 md:px-12 lg:px-20 py-4 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.18em] flex-wrap gap-2">
         <span>© 2026 · The AEO/GEO Playbook · Vol. 01</span>
-        <span className="flex items-center gap-2">Hand-set in Archivo, Space Grotesk & Fraunces <Spark size={12} color="#ffd95c" /></span>
+        <span className="flex items-center gap-2">Set in Space Grotesk, Fraunces & JetBrains Mono <Spark size={12} color="#ffd95c" /></span>
       </div>
     </footer>
   );

@@ -19,7 +19,7 @@ const SCORE_DIMENSIONS = [
   {
     id: 'sources',
     label: 'Source coverage',
-    blurb: 'How many independent, citable sources back the model\'s claims about you? This is citation equity — the same compounding logic backlinks had in classic SEO, now measured in trusted mentions across the corpus the model retrieves from.',
+    blurb: 'How many independent, quotable sources back what the model says about you? Think backlinks, but for being mentioned.',
     examples: ['0 — One or zero', '1 — A handful, mostly owned', '2 — Many, mostly third-party'],
   },
   {
@@ -37,7 +37,7 @@ const SCORE_DIMENSIONS = [
 ];
 
 const VERDICTS = [
-  { min: 0, max: 3, label: 'Invisible', color: '#ef3333', textColor: '#ffffff',
+  { min: 0, max: 3, label: 'Invisible', color: '#d92525', textColor: '#ffffff',
     body: 'You are not in the conversation. The models pick a story without you and the next buyer never types your name. Triage required.' },
   { min: 4, max: 7, label: 'Exposed', color: '#ffd95c', textColor: '#0A0A0A',
     body: 'You appear, but on someone else\'s terms. A competitor with cleaner narrative scaffolding will overwrite you in two quarters. Get tactical.' },
@@ -67,16 +67,14 @@ const Module01 = () => {
       <div className="px-6 md:px-12 lg:px-20 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
           <div className="lg:col-span-8">
-            <SectionTag number="01" title="The Opportunity Scorecard" color="#ef3333" />
+            <SectionTag number="01" title="The Opportunity Scorecard" color="#d92525" />
             <h2 className="font-display uppercase leading-[0.9] text-[clamp(40px,7vw,96px)]">
               How <span className="italic font-serif font-normal lowercase">in</span>visible<br/>
               are you, really?
             </h2>
             <p className="mt-6 max-w-2xl text-lg">
-              Five dimensions. Score each one zero, one, or two. The number you end up with is the
-              first honest signal you have for whether to keep what you're doing or rebuild it on evidence.
-              Each dimension is a retrieval signal — how readily the model can find you, trust you, and
-              prefer you when it assembles its answer.
+              Five questions. Score each one zero, one, or two. The total is your first honest read on
+              whether the models can find you, trust you, and pick you.
             </p>
           </div>
           <div className="lg:col-span-4 flex lg:justify-end">
@@ -98,7 +96,7 @@ const Module01 = () => {
             </div>
             <div className="grid grid-cols-3 gap-2 md:gap-3 flex-1 min-w-0">
               {[
-                { n: 0, label: 'Absent / wrong', bg: '#ef3333', tc: '#ffffff' },
+                { n: 0, label: 'Absent / wrong', bg: '#d92525', tc: '#ffffff' },
                 { n: 1, label: 'Partial / mixed', bg: '#ffd95c', tc: '#0A0A0A' },
                 { n: 2, label: 'Owned / strong', bg: '#a9e1c6', tc: '#0A0A0A' },
               ].map(s => (
@@ -131,7 +129,7 @@ const Module01 = () => {
               <Card color="#0A0A0A" className="p-5 text-paper">
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-mono uppercase text-[11px] tracking-[0.2em]">AI Invisibility Score</span>
-                  <button onClick={reset} className="font-mono text-[11px] uppercase underline underline-offset-2 hover:text-pop-yellow">
+                  <button onClick={reset} className="font-mono text-[11px] uppercase underline underline-offset-2 hover:text-pop-yellow px-3 py-2 -mr-2">
                     Reset
                   </button>
                 </div>
@@ -182,7 +180,7 @@ const Module01 = () => {
 };
 
 const DimensionRow = ({ index, dimension, value, onChange }) => {
-  const colors = ['#ef3333', '#ffd95c', '#a9e1c6'];
+  const colors = ['#d92525', '#ffd95c', '#a9e1c6'];
   return (
     <Card color="#ffffff" className="p-4 md:p-5">
       <div className="flex items-start gap-5 flex-wrap md:flex-nowrap">

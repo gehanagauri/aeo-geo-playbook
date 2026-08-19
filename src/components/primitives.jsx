@@ -18,7 +18,7 @@ const Sticker = ({ children, color = '#ffd95c', rotate = -3, className = '', siz
 
 };
 
-const BurstBadge = ({ children, color = '#ef3333', textColor = '#0A0A0A', size = 220, className = '', rotate = -4 }) => {
+const BurstBadge = ({ children, color = '#d92525', textColor = '#0A0A0A', size = 220, className = '', rotate = -4 }) => {
   return (
     <div
       className={`relative inline-flex items-center justify-center text-center ${className}`}
@@ -92,7 +92,7 @@ const MarqueeBar = ({ items, color = '#0A0A0A', textColor = '#ffffff', speed = 3
       {items.map((it, i) =>
     <span key={i} className="flex items-center gap-10 font-display uppercase text-2xl">
           <span>{it}</span>
-          <span aria-hidden className="inline-block w-3 h-3 rotate-45" style={{ background: '#ef3333' }} />
+          <span aria-hidden className="inline-block w-3 h-3 rotate-45" style={{ background: '#d92525' }} />
         </span>
     )}
     </div>;
@@ -108,12 +108,12 @@ const MarqueeBar = ({ items, color = '#0A0A0A', textColor = '#ffffff', speed = 3
 };
 
 // Diamond/star/blob accent SVGs (simple primitives only — squares/circles/rotated)
-const Diamond = ({ size = 14, color = '#ef3333', className = '' }) =>
+const Diamond = ({ size = 14, color = '#d92525', className = '' }) =>
 <span className={`inline-block ${className}`} style={{ width: size, height: size, background: color, transform: 'rotate(45deg)' }} />;
 
 
 // 4-point sparkle (simple SVG, allowed primitive)
-const Spark = ({ size = 18, color = '#ef3333', className = '' }) =>
+const Spark = ({ size = 18, color = '#d92525', className = '' }) =>
 <svg width={size} height={size} viewBox="0 0 24 24" className={className} aria-hidden>
     <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill={color} />
   </svg>;
