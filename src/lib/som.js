@@ -30,6 +30,27 @@ export function somMentions(text, brand) {
   return new RegExp(`\\b${escaped}\\b`, 'i').test(t);
 }
 
+// The serverless proxy distinguishes its failures, so the UI should too —
+// "try again" is useless advice when the real problem is a rate limit.
+async function askViaApi(prompt) {
+  let r;
+  try {
+    r = await fetch('/api/ask', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt })
+    });
+  } catch {
+    throw new Error("Couldn't reach the server — check your connection and retry.");
+  }
+  if (r.status === 429) throw new Error('Too many runs in a row — wait a minute, then try again.');
+  if (r.status === 502 || r.status === 503) throw new Error('The model is busy right now — try again in a moment.');
+  if (r.status === 504) throw new Error('That took too long — try fewer prompts, or a lower depth.');
+  if (!r.ok) throw new Error("The analysis couldn't run just now — try again shortly.");
+  const data = await r.json();
+  return data.text;
+}
+
 export async function somAskModel(question, brands) {
   const list = brands.join(', ');
   const full =
@@ -41,12 +62,8 @@ When finished, output a line containing exactly "===META===" and then, for EACH 
 BRANDS: ${list}`;
   const text = window.claude?.complete
     ? await window.claude.complete(full)
-    : await fetch('/api/ask', { method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: full })
-      }).then((r) => { if (!r.ok) throw new Error('MODEL ERROR — TRY AGAIN');
-        return r.json(); }).then((d) => d.text);
-  if (!text || !text.trim()) throw new Error('EMPTY RESPONSE — TRY AGAIN');
+    : await askViaApi(full);
+  if (!text || !text.trim()) throw new Error('The model returned nothing — try running again.');
   return text;
 }
 

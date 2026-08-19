@@ -207,7 +207,7 @@ const SOM_STYLES = `
 .som-method strong{font-family:var(--som-mono);font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--som-ink);display:block;margin-bottom:6px}
 .som-method em{font-family:var(--som-serif);font-style:italic;color:var(--som-ink)}
 .som-actions{display:flex;gap:12px;flex-wrap:wrap}
-.som-err{padding:12px 18px;background:var(--som-coral-d);color:#fff;border:2px solid var(--som-ink);border-radius:100px;font-family:var(--som-mono);font-size:12px;font-weight:700;letter-spacing:0.06em;margin-top:16px;box-shadow:3px 3px 0 0 var(--som-ink)}
+.som-err{padding:12px 18px;background:var(--som-coral-d);color:#fff;border:2px solid var(--som-ink);border-radius:12px;font-family:var(--som-sans);font-size:13.5px;font-weight:600;margin-top:16px;box-shadow:3px 3px 0 0 var(--som-ink);max-width:60ch}
 .som-stage-nav{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
 .som-stage-nav .som-btn{flex:1;min-width:200px}
 .som-stage-nav .som-btn.ghost-back{flex:0;min-width:auto}
@@ -504,7 +504,7 @@ const ShareOfModelTool = () => {
         resultHeadRef.current?.focus();
       }, 100);
     } catch (e) {
-      setErr3(e.message || 'CONNECTION FAILED — TRY FEWER PROMPTS');
+      setErr3(e.message || "The analysis couldn't finish — try fewer prompts.");
       setRunning(false);
     }
   };
@@ -769,7 +769,7 @@ const ShareOfModelTool = () => {
                 </div>
               </div>
 
-              {err1 && <div className="som-err">⚠ ADD YOUR BRAND, CATEGORY, AND AT LEAST ONE COMPETITOR</div>}
+              {err1 && <div className="som-err" role="alert">⚠ Add your brand, a category, and at least one competitor to continue.</div>}
 
               <div className="som-stage-nav">
                 <button className="som-btn coral" onClick={() => goStage(2)}>STAGE 02 — CHOOSE PROMPTS →</button>
@@ -852,7 +852,7 @@ const ShareOfModelTool = () => {
                 </div>
                 }
 
-              {err2 && <div className="som-err">⚠ SELECT OR ADD AT LEAST ONE PROMPT</div>}
+              {err2 && <div className="som-err" role="alert">⚠ Pick at least one prompt to run.</div>}
 
               <div className="som-stage-nav">
                 <button className="som-btn ghost ghost-back" onClick={() => goStage(1)}>← BACK</button>
@@ -893,7 +893,7 @@ const ShareOfModelTool = () => {
                   <div style={{ textAlign: 'center' }}>
                     <div className="som-speed-note">⚡ PARALLEL EXECUTION · NO QUEUEING</div>
                   </div>
-                  {err3 && <div className="som-err">⚠ {err3}</div>}
+                  {err3 && <div className="som-err" role="alert">⚠ {err3}</div>}
                 </div>
 
                 {running &&
