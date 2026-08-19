@@ -227,7 +227,7 @@ const Module02 = () => {
                       }
                     }}
                     disabled={phaseIndex === 0 && phaseSteps[0].id === activeStep[phase]}
-                    className="btn-pop inline-flex items-center gap-2 border-ink-3 shadow-pop-sm bg-paper px-4 py-2 font-mono uppercase text-xs disabled:opacity-30 disabled:pointer-events-none"
+                    className="btn-pop tap-44 gap-2 border-ink-3 shadow-pop-sm bg-paper px-4 font-mono uppercase text-xs disabled:opacity-30 disabled:pointer-events-none"
                   >
                     <Icon name="arrow-left" size={16} /> Prev
                   </button>
@@ -256,7 +256,7 @@ const Module02 = () => {
                       }
                     }}
                     disabled={phaseIndex === TRIPLE_PLAY.length - 1 && phaseSteps[phaseSteps.length - 1].id === activeStep[phase]}
-                    className="btn-pop inline-flex items-center gap-2 border-ink-3 shadow-pop-sm bg-pop-yellow px-4 py-2 font-mono uppercase text-xs disabled:opacity-30 disabled:pointer-events-none"
+                    className="btn-pop tap-44 gap-2 border-ink-3 shadow-pop-sm bg-pop-yellow px-4 font-mono uppercase text-xs disabled:opacity-30 disabled:pointer-events-none"
                   >
                     Next <Icon name="arrow-right" size={16} />
                   </button>

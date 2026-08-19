@@ -129,7 +129,7 @@ const Module01 = () => {
               <Card color="#0A0A0A" className="p-5 text-paper">
                 <div className="flex items-center justify-between mb-3">
                   <span className="font-mono uppercase text-[11px] tracking-[0.2em]">AI Invisibility Score</span>
-                  <button onClick={reset} className="font-mono text-[11px] uppercase underline underline-offset-2 hover:text-pop-yellow px-3 py-2 -mr-2">
+                  <button onClick={reset} className="tap-44 font-mono text-[11px] uppercase underline underline-offset-2 hover:text-pop-yellow px-3 -mr-2">
                     Reset
                   </button>
                 </div>

@@ -38,7 +38,7 @@ const Footer = () => {
               <a href={`mailto:${email}`} className="font-display uppercase text-2xl leading-tight break-all hover:underline">{email}</a>
               <button
                 onClick={copy}
-                className="btn-pop inline-flex items-center gap-2 border-ink-3 shadow-pop-sm bg-paper px-4 py-3 font-mono uppercase text-[11px]"
+                className="btn-pop tap-44 gap-2 border-ink-3 shadow-pop-sm bg-paper px-4 font-mono uppercase text-[11px]"
               >
                 <Icon name={copied ? 'check' : 'copy'} size={14} />
                 {copied ? 'Copied' : 'Copy'}

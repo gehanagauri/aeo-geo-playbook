@@ -49,7 +49,7 @@ const StickyNav = () => {
   return (
     <nav className="sticky top-1 z-40 bg-paper/90 nav-blur border-b-4 border-ink">
       <div className="px-4 md:px-8 lg:px-12 py-3 flex items-center justify-between gap-4">
-        <a href="#top" className="flex items-center gap-2 flex-shrink-0">
+        <a href="#top" className="tap-44 gap-2 flex-shrink-0" aria-label="Back to top">
           <span className="inline-flex items-center justify-center w-8 h-8 bg-ink text-paper font-display text-sm">PB</span>
           <span className="font-display uppercase text-lg hidden sm:inline">Playbook · 01</span>
         </a>

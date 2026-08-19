@@ -136,7 +136,7 @@ const Module05 = () => {
                 <pre className="flex-1 font-mono text-[13px] leading-relaxed whitespace-pre-wrap bg-ink/5 border-ink-3 p-3 mb-4 text-ink">{p.body}</pre>
                 <button
                   onClick={() => copy(key, p.body)}
-                  className="btn-pop inline-flex items-center justify-center gap-2 border-ink-3 shadow-pop-sm px-4 py-2 font-mono uppercase text-xs"
+                  className="btn-pop tap-44 w-full gap-2 border-ink-3 shadow-pop-sm px-4 font-mono uppercase text-xs"
                   style={{ background: copied ? '#a9e1c6' : '#ffd95c' }}
                 >
                   <Icon name={copied ? 'check' : 'copy'} size={14} />
