@@ -157,4 +157,4 @@
 
   /* Minimum comfortable touch target (WCAG 2.5.8). Applied to controls whose
      visual size is intentionally small so the hit area grows, not the design. */
-  .tap-44 { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+  .tap-44 { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; }

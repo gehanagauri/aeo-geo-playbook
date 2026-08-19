@@ -75,7 +75,7 @@ const StickyNav = () => {
           Work with me
         </a>
 
-        <button onClick={() => setOpen((o) => !o)} className="md:hidden border-ink-3 p-2" aria-label="Toggle menu">
+        <button onClick={() => setOpen((o) => !o)} className="md:hidden tap-44 border-ink-3" aria-label="Toggle menu">
           <Icon name={open ? 'x' : 'menu'} size={20} />
         </button>
       </div>
