@@ -116,3 +116,38 @@
 
   /* Visually hidden, still read aloud by screen readers. */
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+  /* ── Utilities the frozen Tailwind build is missing ──────────────────────
+     index.html shipped a pre-purged Tailwind stylesheet, and that purge left
+     out every opacity-modifier class plus a few spacing/breakpoint utilities
+     the markup references. Without them, text meant to be muted rendered at
+     full ink and the sticky nav lost its translucency. color-mix keeps these
+     tied to the theme variables, so they still follow a palette change. */
+  .text-ink\/40  { color: color-mix(in srgb, var(--c-ink) 40%, transparent); }
+  .text-ink\/60  { color: color-mix(in srgb, var(--c-ink) 60%, transparent); }
+  .text-ink\/70  { color: color-mix(in srgb, var(--c-ink) 70%, transparent); }
+  .text-ink\/75  { color: color-mix(in srgb, var(--c-ink) 75%, transparent); }
+  .text-ink\/80  { color: color-mix(in srgb, var(--c-ink) 80%, transparent); }
+  .text-paper\/60 { color: color-mix(in srgb, var(--c-paper) 60%, transparent); }
+  .text-paper\/70 { color: color-mix(in srgb, var(--c-paper) 70%, transparent); }
+  .text-paper\/80 { color: color-mix(in srgb, var(--c-paper) 80%, transparent); }
+  .text-paper\/85 { color: color-mix(in srgb, var(--c-paper) 85%, transparent); }
+
+  .bg-ink\/5   { background-color: color-mix(in srgb, var(--c-ink) 5%, transparent); }
+  .bg-ink\/10  { background-color: color-mix(in srgb, var(--c-ink) 10%, transparent); }
+  .bg-ink\/20  { background-color: color-mix(in srgb, var(--c-ink) 20%, transparent); }
+  .bg-paper\/15 { background-color: color-mix(in srgb, var(--c-paper) 15%, transparent); }
+  .bg-paper\/90 { background-color: color-mix(in srgb, var(--c-paper) 90%, transparent); }
+
+  .border-ink\/20   { border-color: color-mix(in srgb, var(--c-ink) 20%, transparent); }
+  .border-ink\/30   { border-color: color-mix(in srgb, var(--c-ink) 30%, transparent); }
+  .border-paper\/30 { border-color: color-mix(in srgb, var(--c-paper) 30%, transparent); }
+
+  .hover\:bg-pop-mint\/80:hover { background-color: color-mix(in srgb, var(--c-3) 80%, transparent); }
+
+  .top-6 { top: 1.5rem; }
+  .pr-12 { padding-right: 3rem; }
+  .-mr-2 { margin-right: -0.5rem; }
+  @media (min-width: 640px)  { .sm\:flex   { display: flex; } }
+  @media (min-width: 1024px) { .lg\:inline { display: inline; } }
+  @media (min-width: 1280px) { .xl\:block  { display: block; } }

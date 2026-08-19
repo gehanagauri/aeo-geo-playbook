@@ -17,7 +17,7 @@ const Hero = () => {
       <div className="relative px-6 md:px-12 lg:px-20 pt-14 pb-20 paper-tex">
         {/* Floating accents */}
         <div className="hidden xl:block absolute top-6 right-12 rotate-12">
-          <Sticker color="#a9e1c6" rotate={8} size="lg">Read time · 22 min</Sticker>
+          <Sticker color="#a9e1c6" rotate={8} size="lg">5 modules · 1 live tool</Sticker>
         </div>
         <div className="hidden lg:block absolute bottom-10 left-10">
           <Diamond size={28} color="#d92525" />

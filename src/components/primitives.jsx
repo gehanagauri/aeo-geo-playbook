@@ -33,37 +33,24 @@ const BurstBadge = ({ children, color = '#d92525', textColor = '#0A0A0A', size =
 
 };
 
-const PostageStamp = ({ color = '#8baaff', rotate = 2, width = 250, padY = 18, className = '' }) => {
-  const perf = 18,r = 7;
-  const mask = [
-  `radial-gradient(circle ${r}px at 50% 0,#0000 96%,#000) 0 0/${perf}px ${perf}px repeat-x`,
-  `radial-gradient(circle ${r}px at 50% 100%,#0000 96%,#000) 0 100%/${perf}px ${perf}px repeat-x`,
-  `radial-gradient(circle ${r}px at 0 50%,#0000 96%,#000) 0 0/${perf}px ${perf}px repeat-y`,
-  `radial-gradient(circle ${r}px at 100% 50%,#0000 96%,#000) 100% 0/${perf}px ${perf}px repeat-y`,
-  `linear-gradient(#000,#000) 50%/calc(100% - ${perf + 4}px) calc(100% - ${perf + 4}px) no-repeat`].
-  join(',');
-  return (
-    <div
-      className={`inline-block ${className}`}
-      style={{
-        width, padding: 16, background: color, color: 'var(--c-ink)',
-        transform: `rotate(${rotate}deg)`,
-        filter: 'drop-shadow(7px 7px 0 var(--c-ink))',
-        WebkitMask: mask, mask,
-        WebkitMaskComposite: 'source-out', maskComposite: 'subtract'
-      }}>
-      <div className="text-center" style={{ border: '3px dashed var(--c-ink)', padding: `${padY}px 16px` }}>
-        <div className="flex justify-between font-mono uppercase" style={{ fontSize: 10, letterSpacing: '0.2em', marginBottom: 10 }}>
-          <span>Nº 01</span><span>AEO·GEO</span>
-        </div>
-        <div className="font-display uppercase" style={{ lineHeight: 0.9, fontSize: 25 }}>
-          Make sure you get{' '}
-          <em style={{ fontStyle: 'normal', background: 'var(--c-ink)', color, padding: '0 4px' }}>cited</em>
-        </div>
+// Stamp-style card for the hero. Built from the same border + hard-shadow
+// vocabulary as Card; the original mask-composite perforation collapsed to a
+// few stray lines in Chrome, so the scalloped edge is gone rather than broken.
+const PostageStamp = ({ color = '#8baaff', rotate = 2, width = 250, padY = 18, className = '' }) => (
+  <div
+    className={`inline-block border-ink-4 shadow-pop ${className}`}
+    style={{ width, padding: 14, background: color, color: 'var(--c-ink)', transform: `rotate(${rotate}deg)` }}>
+    <div className="text-center" style={{ border: '3px dashed var(--c-ink)', padding: `${padY}px 16px` }}>
+      <div className="flex justify-between font-mono uppercase" style={{ fontSize: 10, letterSpacing: '0.2em', marginBottom: 10 }}>
+        <span>Nº 01</span><span>AEO·GEO</span>
       </div>
-    </div>);
+      <div className="font-display uppercase" style={{ lineHeight: 0.9, fontSize: 25 }}>
+        Make sure you get{' '}
+        <em style={{ fontStyle: 'normal', background: 'var(--c-ink)', color, padding: '0 4px' }}>cited</em>
+      </div>
+    </div>
+  </div>);
 
-};
 
 const SectionTag = ({ number, title, color = '#8baaff' }) =>
 <div className="flex items-center gap-3 mb-4">

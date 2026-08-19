@@ -101,7 +101,7 @@ const Module03 = () => {
                   </div>
                   <div className="md:col-span-4 p-4 border-b-4 md:border-b-0 md:border-r-4 border-ink relative">
                     <div className="absolute top-3 right-3 font-mono text-[10px] uppercase tracking-wider text-ink/40">Now</div>
-                    <p className="text-ink/70 line-through decoration-pop-red decoration-2">{row.today}</p>
+                    <p className="text-ink/70 line-through decoration-pop-red decoration-2 pr-12">{row.today}</p>
                   </div>
                   <button
                     onClick={() => setOpenIdx(open ? -1 : i)}
